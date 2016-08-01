@@ -9,12 +9,15 @@
             [infinitelives.pixi.pixelfont :as pf]
             [infinitelives.utils.math :as math]
             [infinitelives.utils.sound :as sound]
+            [infinitelives.utils.gamepad :as gp]
+            [infinitelives.utils.events :as events]
             [infinitelives.utils.console :refer [log]]
 
             [cloud-fighter.parallax :as parallax]
 
             [cljs.core.async :refer [<!]])
   (:require-macros [cljs.core.async.macros :refer [go]]
+                   [cloud-fighter.async :refer [go-while]]
                    [infinitelives.pixi.macros :as m]
                    [infinitelives.pixi.pixelfont :as pf]
                    ))
@@ -38,8 +41,17 @@
            :expand true
            :origins {:roller :left}}))
 
+(defn start? []
+  (or
+   (.-pressed (gp/button 0 :a))
+   (.-pressed (gp/button 0 :b))
+   (.-pressed (gp/button 0 :x))
+   (.-pressed (gp/button 0 :y))
+   (events/any-pressed?)
+   ))
+
 (defn keyboard-controls [canvas]
-  (go
+  (go-while (not (start?))
     (m/with-sprite canvas :ui
       [text (pf/make-text :small "Keyboard Controls" :scale font-scale :x 0 :y 150 :tint 0x8080ff :visible false)
        text-2 (pf/make-text :small "←→↑↓" :scale font-scale :x -200 :y 200 :tint 0xffff80 :visible false)
@@ -74,7 +86,7 @@
           (recur (inc f)))))))
 
 (defn gamepad-controls [canvas]
-  (go
+  (go-while (not (start?))
     (m/with-sprite canvas :ui
       [text (pf/make-text :small "Gamepad Controls" :scale font-scale :x 0 :y 150 :tint 0x8080ff :visible false)
        text-2 (pf/make-text :small "Analog Stick" :scale font-scale :x -200 :y 200 :tint 0xffff80 :visible false)
@@ -109,7 +121,7 @@
           (recur (inc f)))))))
 
 (defn credits [canvas]
-  (go
+  (go-while (not (start?))
     (m/with-sprite canvas :ui
       [text (pf/make-text :small "Credits" :scale font-scale :x 0 :y 150 :tint 0x8080ff :visible false)
        text-2 (pf/make-text :small "Copyright (C) 2016" :scale font-scale :x -220 :y 200 :tint 0xffff80 :visible false)
@@ -145,7 +157,7 @@
 
 
 (defn titlescreen [canvas]
-  (go
+  (go-while (not (start?))
     (m/with-sprite canvas :player
       [ player (s/make-sprite :player :scale scale :x 0 :y 30)]
       (m/with-sprite canvas :ui
@@ -153,7 +165,7 @@
          cloud-text (s/make-sprite (r/get-texture :cloud-text :nearest) :scale title-scale :x 0 :y 0)
 
          ]
-        (go
+        (go-while (not (start?))
           (while true
             (<! (keyboard-controls canvas))
             (<! (e/wait-frames 60))
@@ -228,6 +240,13 @@
           [clouds-upper (drop 15 clouds)]
 
           (parallax/cloud-thread clouds)
-          (<! (titlescreen canvas)))))
+          (<! (titlescreen canvas))
+
+          ;; loop forever
+          (loop []
+            (<! (e/next-frame))
+            (recur))
+          )))
+
 
     ))
