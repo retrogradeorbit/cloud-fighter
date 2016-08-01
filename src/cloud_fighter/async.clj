@@ -1,7 +1,5 @@
 (ns cloud-fighter.async
-  (:require [clojure.walk :as w]
-            [cljs.core.async.macros :as m])
-)
+  (:require [cljs.core.async.macros :as m]))
 
 ;; macros for more convenient game async
 (defmacro <!* [test & body]
