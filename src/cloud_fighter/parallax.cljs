@@ -10,7 +10,7 @@
 )
 
 
-(def num-clouds 40)
+(def num-clouds 20)
 (def cloud-choice [:cloud_1 :cloud_2 :cloud_3 :cloud_4 :cloud_5 :cloud_6 :cloud_7 :cloud_8 :cloud_9 :cloud_10])
 (def cloud-set
   (sort-by :z
