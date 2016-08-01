@@ -1,7 +1,7 @@
 CSS=build/css/style.css
 APP=build/js/compiled/cloud_fighter.js
 IDX=build/index.html
-IMG=build/img/sprites.png build/img/fonts.png
+IMG=build/img/sprites.png build/img/fonts.png build/img/cloud-text.png build/img/fighter-text.png build/img/cloud_1.png build/img/cloud_2.png build/img/cloud_3.png build/img/cloud_4.png build/img/cloud_5.png build/img/cloud_6.png build/img/cloud_7.png build/img/cloud_8.png build/img/cloud_9.png build/img/cloud_10.png
 IMG_PUBLIC=$(subst build,resources/public,$(IMG))
 SFX_SOURCE=$(wildcard resources/public/sfx/*.ogg)
 SFX=$(subst resources/public,build,$(SFX_SOURCE))
@@ -40,5 +40,10 @@ setup-build-folder:
 	git clone $(REPO) build/
 	cd build && git checkout gh-pages
 
-create-build-folder:
+create-initial-build-folder:
 	git clone $(REPO) build/
+	cd build && git checkout --orphan gh-pages && git rm -rf .
+	@echo "now make release build into build/, cd into build and:"
+	@echo "git add ."
+	@echo "git commit -a -m 'First release'"
+	@echo "git push origin gh-pages"

@@ -50,7 +50,7 @@
                 :source-paths ["src"]
                 :compiler {:output-to "build/js/compiled/cloud_fighter.js"
                            :main cloud-fighter.core
-                           :optimizations :advanced
+                           :optimizations :simple ;:advanced
                            :pretty-print false}}]}
 
   :figwheel {;; :http-server-root "public" ;; default and assumes "resources"
