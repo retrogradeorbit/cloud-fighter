@@ -48,7 +48,7 @@
                ;; lein cljsbuild once min
                {:id "min"
                 :source-paths ["src"]
-                :compiler {:output-to "resources/public/js/compiled/cloud_fighter.js"
+                :compiler {:output-to "build/js/compiled/cloud_fighter.js"
                            :main cloud-fighter.core
                            :optimizations :advanced
                            :pretty-print false}}]}
