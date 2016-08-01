@@ -27,10 +27,13 @@
 (def title-ypos -300)
 (def title-word-separation 100)
 (def font-scale 2)
-(def scale 4)
+(def scale 3)
+
+(def spritesheet-assets
+  {:player {:pos [0 0] :size [32 32]}})
 
 (defonce canvas
-  (c/init {:layers [:bg :sky :clouds :titles :ui]
+  (c/init {:layers [:bg :sky :clouds-lower :player :clouds-upper :titles :ui]
            :background sky-colour
            :expand true
            :origins {:roller :left}}))
@@ -143,35 +146,38 @@
 
 (defn titlescreen [canvas]
   (go
-    (m/with-sprite canvas :ui
-      [fighter-text (s/make-sprite (r/get-texture :fighter-text :nearest) :scale title-scale :x 0 :y 0)
-       cloud-text (s/make-sprite (r/get-texture :cloud-text :nearest) :scale title-scale :x 0 :y 0)
-       ]
-      (go
-        (while true
-          (<! (keyboard-controls canvas))
-          (<! (e/wait-frames 60))
-          (<! (gamepad-controls canvas))
-          (<! (e/wait-frames 60))
-          (<! (credits canvas))
-          (<! (e/wait-frames 60)))
-        )
-      (loop [f 0]
+    (m/with-sprite canvas :player
+      [ player (s/make-sprite :player :scale scale :x 0 :y 30)]
+      (m/with-sprite canvas :ui
+        [fighter-text (s/make-sprite (r/get-texture :fighter-text :nearest) :scale title-scale :x 0 :y 0)
+         cloud-text (s/make-sprite (r/get-texture :cloud-text :nearest) :scale title-scale :x 0 :y 0)
 
-        (s/set-y! cloud-text (+ title-ypos (* 50 (Math/pow (Math/sin (/ f 60)) 2))))
-        (s/set-y! fighter-text (+ title-ypos title-word-separation (* 30 (Math/pow (Math/sin (/ f 50)) 2))))
+         ]
+        (go
+          (while true
+            (<! (keyboard-controls canvas))
+            (<! (e/wait-frames 60))
+            (<! (gamepad-controls canvas))
+            (<! (e/wait-frames 60))
+            (<! (credits canvas))
+            (<! (e/wait-frames 60)))
+          )
+        (loop [f 0]
 
-        (s/set-rotation! cloud-text (/ (Math/sin (/ f 60)) 20))
-        (s/set-rotation! fighter-text (/ (Math/sin (/ f 50)) -20))
+          (s/set-y! cloud-text (+ title-ypos (* 50 (Math/pow (Math/sin (/ f 60)) 2))))
+          (s/set-y! fighter-text (+ title-ypos title-word-separation (* 30 (Math/pow (Math/sin (/ f 50)) 2))))
 
-        (s/set-scale! cloud-text (+ title-scale (Math/pow (Math/sin (/ f 60)) 2)))
-        (s/set-scale! fighter-text (+ title-scale (Math/pow (Math/sin (/ f 50)) 2)))
+          (s/set-rotation! cloud-text (/ (Math/sin (/ f 60)) 20))
+          (s/set-rotation! fighter-text (/ (Math/sin (/ f 50)) -20))
 
-        (parallax/titlescreen-update!)
+          (s/set-scale! cloud-text (+ title-scale (Math/pow (Math/sin (/ f 60)) 2)))
+          (s/set-scale! fighter-text (+ title-scale (Math/pow (Math/sin (/ f 50)) 2)))
 
-        (<! (e/next-frame))
-        (recur (inc f))
-        )))
+          (parallax/titlescreen-update!)
+
+          (<! (e/next-frame))
+          (recur (inc f))
+          ))))
   )
 
 (defonce main
@@ -203,7 +209,8 @@
                            "img/clouds/cloud_24.png"
                            "img/cloud-text.png"
                            "img/fighter-text.png"
-                           "img/fonts.png"]))
+                           "img/fonts.png"
+                           "img/sprites.png"]))
 
     (pf/pixel-font :small "img/fonts.png" [16 65] [238 111]
                    :chars ["ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -212,10 +219,15 @@
                    :kerning {"fo" -2  "ro" -1 "la" -1 }
                    :space 5)
 
-    (m/with-sprite-set canvas :clouds
-      [clouds (parallax/get-sprites)]
+    (t/load-sprite-sheet! (r/get-texture :sprites :nearest) spritesheet-assets)
 
-      (parallax/cloud-thread clouds)
-      (<! (titlescreen canvas)))
+    (let [clouds (parallax/get-sprites)]
+      (m/with-sprite-set canvas :clouds-lower
+        [clouds-lower (take 15 clouds)]
+        (m/with-sprite-set canvas :clouds-upper
+          [clouds-upper (drop 15 clouds)]
+
+          (parallax/cloud-thread clouds)
+          (<! (titlescreen canvas)))))
 
     ))
