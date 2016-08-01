@@ -43,10 +43,10 @@
 
 (defn start? []
   (or
-   (.-pressed (gp/button 0 :a))
-   (.-pressed (gp/button 0 :b))
-   (.-pressed (gp/button 0 :x))
-   (.-pressed (gp/button 0 :y))
+   (gp/button-pressed? 0 :a)
+   (gp/button-pressed? 0 :b)
+   (gp/button-pressed? 0 :x)
+   (gp/button-pressed? 0 :y)
    (events/any-pressed?)
    ))
 
