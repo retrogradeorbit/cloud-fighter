@@ -14,6 +14,7 @@
             [infinitelives.utils.console :refer [log]]
 
             [cloud-fighter.parallax :as parallax]
+            [cloud-fighter.game :as game]
 
             [cljs.core.async :refer [<!]])
   (:require-macros [cljs.core.async.macros :refer [go]]
