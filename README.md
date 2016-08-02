@@ -1,6 +1,10 @@
 # cloud-fighter
 
-FIXME: Write a one-line description of your library/project.
+A game done for the August 2016 Lisp Gamejam
+
+[PLAY IT!](https://retrogradeorbit.github.io/cloud-fighter/)
+
+(work in progress)
 
 ## Overview
 
