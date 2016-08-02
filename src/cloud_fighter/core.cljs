@@ -34,10 +34,11 @@
 (def scale 3)
 
 (def spritesheet-assets
-  {:player {:pos [0 0] :size [32 32]}})
+  {:player {:pos [0 0] :size [32 32]}
+   :bullet {:pos [32 0] :size [16 16]}})
 
 (defonce canvas
-  (c/init {:layers [:bg :sky :clouds-lower :player :clouds-upper :titles :ui]
+  (c/init {:layers [:bg :sky :clouds-lower :bullets :player :clouds-upper :titles :ui]
            :background sky-colour
            :expand true
            :origins {:roller :left}}))
