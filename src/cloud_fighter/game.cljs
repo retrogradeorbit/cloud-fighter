@@ -16,7 +16,8 @@
 (def rotate-speed 0.05)
 
 (defn direction []
-  (let [gamepad (vec2/vec2 (gp/axis 0) (gp/axis 1))]
+  (let [gamepad (vec2/vec2 (or (gp/axis 0) 0)
+                           (or (gp/axis 1) 0))]
     (if (> (vec2/magnitude-squared gamepad) 0.8)
       ;; gamepad overrules
       gamepad
