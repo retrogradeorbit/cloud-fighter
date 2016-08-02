@@ -1,6 +1,7 @@
 (ns cloud-fighter.parallax
   (:require
    [infinitelives.utils.math :as math]
+   [infinitelives.utils.vec2 :as vec2]
    [infinitelives.pixi.events :as e]
    [infinitelives.pixi.sprite :as s]
    [infinitelives.pixi.resources :as r]
@@ -58,3 +59,8 @@
 (defn titlescreen-update! []
   (swap! position update 1 + 0.5)
 )
+
+(defn update! [vel]
+  (swap! position #(-> %
+                       (update 0 - (vec2/get-x vel))
+                       (update 1 - (vec2/get-y vel)))))
