@@ -76,13 +76,14 @@
       (m/with-sprite canvas :bullets
         [bullet (s/make-sprite :bullet :scale 4 :rotation (+ heading Math/PI) :x 0 :y 0)]
         (loop [n lifetime
-               pos (vec2/vec2 0 0)]
+               pos (-> heading
+                       (vec2/unit)
+                       (vec2/scale 40))]
           (s/set-pos! bullet pos)
           (<! (e/next-frame))
 
           (when (pos? n)
-            (recur (dec n) (vec2/add pos update)))))))
-)
+            (recur (dec n) (vec2/add pos update))))))))
 
 (defn run [canvas player]
   (go
