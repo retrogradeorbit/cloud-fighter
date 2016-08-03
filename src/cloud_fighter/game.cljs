@@ -5,6 +5,7 @@
             [infinitelives.utils.events :as events]
             [infinitelives.utils.console :refer [log]]
             [cloud-fighter.parallax :as parallax]
+            [cloud-fighter.enemy :as enemy]
             [infinitelives.utils.gamepad :as gp]
             [cljs.core.async :refer [<!]])
   (:require-macros [cljs.core.async.macros :refer [go]]
@@ -96,6 +97,11 @@
 
         (when (and fire (not last-fire))
           (spawn-bullet! canvas heading 10 60))
+
+        (when (events/is-pressed? :e)
+          (while (events/is-pressed? :e)
+            (<! (e/next-frame)))
+          (enemy/spawn canvas))
 
         (<! (e/next-frame))
         (recur (turned-heading heading) fire)))))
