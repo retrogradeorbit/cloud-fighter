@@ -87,12 +87,14 @@
 (defn run [canvas player]
   (go
     ;; loop forever
-    (loop [heading (vec2/vec2 0 -1)]
-      (parallax/update! (vec2/scale heading 0.5))
-      (s/set-rotation! player (vec2/heading (vec2/rotate-90 heading)))
+    (loop [heading (vec2/vec2 0 -1)
+           last-fire false]
+      (let [fire (fire?)]
+        (parallax/update! (vec2/scale heading 0.5))
+        (s/set-rotation! player (vec2/heading (vec2/rotate-90 heading)))
 
-      (when (fire?)
-        (spawn-bullet! canvas heading 10 60))
+        (when (and fire (not last-fire))
+          (spawn-bullet! canvas heading 10 60))
 
-      (<! (e/next-frame))
-      (recur (turned-heading heading)))))
+        (<! (e/next-frame))
+        (recur (turned-heading heading) fire)))))
