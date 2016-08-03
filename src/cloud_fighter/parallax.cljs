@@ -5,6 +5,7 @@
    [infinitelives.pixi.events :as e]
    [infinitelives.pixi.sprite :as s]
    [infinitelives.pixi.resources :as r]
+   [cloud-fighter.state :as state]
    [cljs.core.async :refer [<!]])
   (:require-macros [cljs.core.async.macros :refer [go]]
                    [infinitelives.pixi.macros :as m])
@@ -24,7 +25,6 @@
 
 (def scale 3)
 (def edge-gutter (* 128 scale))
-(def position (atom [0 0]))
 
 (defn get-sprites []
   (for [{:keys [x y z depth]} cloud-set]
@@ -43,8 +43,8 @@
      (map
       (fn [{:keys [x y z] :as old} sprite]
         (s/set-pos! sprite
-                    (- (mod (+ (* 4 x) (* xp z)) w) hw)
-                    (- (mod (+ (* 4 y) (* yp z)) h) hh)))
+                    (- (mod (+ (* 4 x) (* 0.1 (- xp) z)) w) hw)
+                    (- (mod (+ (* 4 y) (* 0.1 (- yp) z)) h) hh)))
       cloud-set
       clouds))))
 
@@ -53,14 +53,5 @@
   (go
     (loop [c 0]
       (<! (e/next-frame))
-      (set-cloud-positions! clouds @position)
+      (set-cloud-positions! clouds (vec2/as-vector (:pos @state/state)))
       (recur (inc c)))))
-
-(defn titlescreen-update! []
-  (swap! position update 1 + 0.5)
-)
-
-(defn update! [vel]
-  (swap! position #(-> %
-                       (update 0 - (vec2/get-x vel))
-                       (update 1 - (vec2/get-y vel)))))
