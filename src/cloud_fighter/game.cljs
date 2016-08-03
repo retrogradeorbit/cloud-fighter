@@ -40,23 +40,34 @@
    (gp/button-pressed? 0 :x)
    (gp/button-pressed? 0 :y)))
 
-(defn turn-dir [heading]
+(defn side-dot [heading dir]
+  (vec2/dot (vec2/rotate-90 heading) dir))
+
+(defn turned-heading [heading]
   (let [dir (direction)
-        dot (vec2/dot (vec2/rotate-90 heading) dir)]
+        dot (side-dot heading dir)]
     (cond
       (and
        (zero? (vec2/get-x dir))
        (zero? (vec2/get-y dir)))
-      :none
+      heading
 
+      ;; turn right
       (pos? dot)
-      :right
+      (let [turned (vec2/rotate heading rotate-speed)
+            dot (side-dot turned dir)]
+        ;; if new dot is now negative, weve overturned
+        (if (neg? dot) heading turned))
 
+      ;; turn left
       (neg? dot)
-      :left
+      (let [turned (vec2/rotate heading (- rotate-speed))
+            dot (side-dot turned dir)]
+        ;; if new dot is now posative, weve overturned
+        (if (pos? dot) heading turned))
 
       :default
-      :none)))
+      heading)))
 
 (defn spawn-bullet! [canvas heading speed lifetime]
   (let [update (-> heading vec2/unit
@@ -84,8 +95,4 @@
         (spawn-bullet! canvas heading 10 60))
 
       (<! (e/next-frame))
-      (recur (vec2/rotate heading
-                          (case (turn-dir heading)
-                            :right rotate-speed
-                            :left (- rotate-speed)
-                            :none 0))))))
+      (recur (turned-heading heading)))))
