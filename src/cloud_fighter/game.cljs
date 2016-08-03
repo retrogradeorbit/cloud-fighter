@@ -6,6 +6,7 @@
             [infinitelives.utils.console :refer [log]]
             [cloud-fighter.parallax :as parallax]
             [cloud-fighter.enemy :as enemy]
+            [cloud-fighter.state :as state]
             [infinitelives.utils.gamepad :as gp]
             [cljs.core.async :refer [<!]])
   (:require-macros [cljs.core.async.macros :refer [go]]
@@ -15,6 +16,7 @@
 )
 
 (def rotate-speed 0.05)
+(def player-speed 4)
 
 (defn direction []
   (let [gamepad (vec2/vec2 (or (gp/axis 0) 0)
@@ -92,7 +94,7 @@
     (loop [heading (vec2/vec2 0 -1)
            last-fire false]
       (let [fire (fire?)]
-        (parallax/update! (vec2/scale heading 0.5))
+        (state/update-pos! (vec2/scale heading player-speed))
         (s/set-rotation! player (vec2/heading (vec2/rotate-90 heading)))
 
         (when (and fire (not last-fire))
