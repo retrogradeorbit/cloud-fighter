@@ -15,6 +15,7 @@
 
             [cloud-fighter.parallax :as parallax]
             [cloud-fighter.game :as game]
+            [cloud-fighter.state :as state]
 
             [cljs.core.async :refer [<!]])
   (:require-macros [cljs.core.async.macros :refer [go]]
@@ -186,7 +187,7 @@
         (s/set-scale! cloud-text (+ title-scale (Math/pow (Math/sin (/ f 60)) 2)))
         (s/set-scale! fighter-text (+ title-scale (Math/pow (Math/sin (/ f 50)) 2)))
 
-        (parallax/titlescreen-update!)
+        (state/titlescreen-update!)
 
         (<! (e/next-frame))
         (recur (inc f))
@@ -226,7 +227,7 @@
         (m/with-sprite-set canvas :clouds-upper
           [clouds-upper (drop 15 clouds)]
           (m/with-sprite canvas :player
-            [ player (s/make-sprite :player :scale scale :x 0 :y 0)]
+            [player (s/make-sprite :player :scale scale :x 0 :y 0)]
 
             (parallax/cloud-thread clouds)
             (<! (titlescreen canvas))
