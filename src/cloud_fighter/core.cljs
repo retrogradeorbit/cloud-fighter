@@ -37,7 +37,15 @@
 (def spritesheet-assets
   {:player {:pos [0 0] :size [32 32]}
    :bullet {:pos [32 0] :size [16 16]}
-   :enemy {:pos [48 0] :size [32 32]}})
+   :enemy {:pos [48 0] :size [32 32]}
+   :explode-1 {:pos [0 32] :size [32 32]}
+   :explode-2 {:pos [32 32] :size [32 32]}
+   :explode-3 {:pos [64 32] :size [32 32]}
+   :explode-4 {:pos [96 32] :size [32 32]}
+   :explode-5 {:pos [128 32] :size [32 32]}
+   :explode-6 {:pos [160 32] :size [32 32]}
+   :explode-7 {:pos [192 32] :size [32 32]}
+})
 
 (defonce canvas
   (c/init {:layers [:sky :clouds-lower :bullets :enemy :player :clouds-upper :titles :ui]
