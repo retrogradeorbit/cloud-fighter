@@ -5,10 +5,12 @@
             [infinitelives.utils.events :as events]
             [infinitelives.utils.spatial :as spatial]
             [infinitelives.utils.console :refer [log]]
+            [infinitelives.pixi.pixelfont :as pf]
             [cloud-fighter.parallax :as parallax]
             [cloud-fighter.enemy :as enemy]
             [cloud-fighter.state :as state]
             [cloud-fighter.explosion :as explosion]
+            [cloud-fighter.bullet :as bullet]
             [infinitelives.utils.gamepad :as gp]
             [cljs.core.async :refer [<!]])
   (:require-macros [cljs.core.async.macros :refer [go]]
@@ -74,35 +76,57 @@
       :default
       heading)))
 
-(defn spawn-bullet! [canvas heading speed lifetime]
-  (let [update (-> heading vec2/unit
-                   (vec2/scale speed))
-        initial-pos (-> heading
-                       (vec2/unit)
-                       (vec2/scale 40))
-        key [:bullet (keyword (gensym))]]
-    (go
-      (m/with-sprite canvas :bullets
-        [bullet (s/make-sprite :bullet :scale 4 :x 0 :y 0)]
-        (spatial/add-to-spatial! :default key (vec2/as-vector initial-pos))
-        (loop [n lifetime
-               pos initial-pos]
-          (s/set-pos! bullet pos)
-          (<! (e/next-frame))
+(defn change-text! [batch font-key text]
+  (let [font (pf/get-font font-key)]
+    (loop [[c & l] (seq text)
+           xp 0 yp 0
+           last-c nil]
+      (let [char ((:font font) c)
+            {:keys [texture pos size]} char
+            [x y] pos
+            [w h] size
+            pair (str last-c c)
+            koff ((:kerning font) pair)
+            ]
+        (if (nil? char)
+          ;; if character is not present in font map, put a space
+          (when (seq l)
+            (recur l (+ xp (:space font)) yp c))
 
-          (when (pos? n)
-            (let [next-pos (vec2/add pos update)]
-              (spatial/move-in-spatial :default key
-                                       (vec2/as-vector pos)
-                                       (vec2/as-vector next-pos))
-              (recur (dec n) next-pos)))
-
-          (spatial/remove-from-spatial :default key (vec2/as-vector pos)))))))
+          (do
+            ;character is present, add the sprite to the container
+            (.addChild batch (s/make-sprite texture :x (+ xp koff) :y yp :xhandle 0 :yhandle 0))
+            (if (seq l)
+              (recur l (+ xp w 1.0 koff) yp c)
+              (s/set-pivot! batch (/ (+ xp w koff) 2.0) 0))))))))
 
 (defn run [canvas player]
   (go
     ;; new spatial hash
     (spatial/new-spatial! :default 64)
+
+    ;; lives icons
+    (go
+      (m/with-sprite canvas :lives
+        [lives (s/make-sprite :player :scale 3 :x 40 :y -40)
+         lives-2 (s/make-sprite :player :scale 3 :x (+ 40 60) :y -40)]
+        (while true (<! (e/next-frame)))
+        ))
+
+    ;; score
+    (go
+      (m/with-sprite canvas :score
+        [score-text (pf/make-text :small (-> @state/state :score str)
+                             :scale 3
+                             :x 100 :y 16)]
+        (loop [score (:score @state/state)]
+          (<! (e/next-frame))
+          (let [new-score (:score @state/state)]
+            (when (not= new-score score)
+              (.removeChildren score-text)
+              (change-text! score-text :small (str new-score)))
+            (recur new-score)))
+        ))
 
     ;; loop forever
     (loop [heading (vec2/vec2 0 -1)
@@ -112,7 +136,7 @@
         (s/set-rotation! player (vec2/heading (vec2/rotate-90 heading)))
 
         (when (and fire (not last-fire))
-          (spawn-bullet! canvas heading 10 60))
+          (bullet/spawn-bullet! canvas heading 10 60))
 
         (when (or
                (events/is-pressed? :e)
@@ -132,8 +156,9 @@
                  (map first)
                  (into #{}))
 
+                #_ (:hash (:default @spatial/spatial-hashes))
 
-                (:hash (:default @spatial/spatial-hashes))
+                @bullet/bullets
                 ))
           )
 
