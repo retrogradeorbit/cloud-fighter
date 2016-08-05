@@ -114,7 +114,9 @@
         (when (and fire (not last-fire))
           (spawn-bullet! canvas heading 10 60))
 
-        (when (events/is-pressed? :e)
+        (when (or
+               (events/is-pressed? :e)
+               (gp/button-pressed? 0 :right-bumper))
           (while (events/is-pressed? :e)
             (<! (e/next-frame)))
           (enemy/spawn canvas))
