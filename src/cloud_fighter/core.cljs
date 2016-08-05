@@ -235,6 +235,7 @@
         [clouds-lower (take 15 clouds)]
         (m/with-sprite-set canvas :clouds-upper
           [clouds-upper (drop 15 clouds)]
+          (doseq [c clouds-upper] (s/set-alpha! c 0.9))
           (m/with-sprite canvas :player
             [player (s/make-sprite :player :scale scale :x 0 :y 0)]
 
