@@ -7,6 +7,8 @@
     ;; position of player in world
     :pos (vec2/zero)
     :vel (vec2/zero)
+    :alive? true
+    :lives 3
     }))
 
 (defn update-pos! [vel]
@@ -20,3 +22,6 @@
          #(-> %
               (update-in [:pos] vec2/add (vec2/vec2 0 -4))
               (assoc :vel (vec2/vec2 0 -4)))))
+
+(defn kill-player! []
+  (swap! state assoc :alive? false))
