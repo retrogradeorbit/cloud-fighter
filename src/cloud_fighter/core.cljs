@@ -48,10 +48,11 @@
 })
 
 (defonce canvas
-  (c/init {:layers [:sky :clouds-lower :bullets :enemy :player :clouds-upper :titles :ui]
+  (c/init {:layers [:clouds-lower :bullets :enemy :player :clouds-upper :lives :score :ui]
            :background sky-colour
            :expand true
-           :origins {:roller :left}}))
+           :origins {:lives :bottom-left
+                     :score :top-left}}))
 
 (defn start? []
   (or
