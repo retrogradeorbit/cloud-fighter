@@ -51,7 +51,6 @@
       cloud-set
       clouds))))
 
-
 (defn cloud-thread [clouds]
   (go
     (loop [c 0]
