@@ -2,6 +2,7 @@
   (:require
    [infinitelives.utils.math :as math]
    [infinitelives.utils.vec2 :as vec2]
+   [infinitelives.utils.console :refer [log]]
    [infinitelives.pixi.events :as e]
    [infinitelives.pixi.sprite :as s]
    [infinitelives.pixi.resources :as r]
@@ -29,10 +30,12 @@
 (defn get-sprites []
   (for [{:keys [x y z depth]} cloud-set]
     (s/make-sprite
-     (r/get-texture (nth cloud-choice depth) :nearest)
+     (r/get-texture (rand-nth cloud-choice) :nearest)
      :x (* scale x)
      :y (* scale y)
-     :scale scale)))
+     :scale scale
+     ;;:alpha 0.5
+     )))
 
 (defn set-cloud-positions! [clouds [xp yp]]
   (let [w (+ edge-gutter (.-innerWidth js/window))
