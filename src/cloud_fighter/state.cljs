@@ -9,6 +9,7 @@
     :vel (vec2/zero)
     :alive? true
     :lives 3
+    :score 0
     }))
 
 (defn update-pos! [vel]
@@ -25,3 +26,6 @@
 
 (defn kill-player! []
   (swap! state assoc :alive? false))
+
+(defn add-score! [score]
+  (swap! state update-in [:score] + score))
