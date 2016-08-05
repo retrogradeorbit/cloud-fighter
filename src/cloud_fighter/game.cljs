@@ -145,6 +145,9 @@
             (<! (e/next-frame)))
           (enemy/spawn canvas))
 
+        (when (< (enemy/count-enemies) 8)
+          (enemy/spawn canvas))
+
         (when (events/is-pressed? :s)
           (while (events/is-pressed? :s)
             (<! (e/next-frame)))
