@@ -40,6 +40,8 @@
           (s/set-rotation! enemy (+ (vec2/heading (:vel boid)) (/ Math/PI 2)))
           (<! (e/next-frame))
 
+
+
           ;; check for collision
           (let [matched (->>
                          (spatial/query (:default @spatial/spatial-hashes)
@@ -48,8 +50,8 @@
                          keys
                          (filter #(= :bullet (first %)))
                          )]
-            (if (pos? (count matched))
-
+            (cond
+              (pos? (count matched))
               ;; shot!
               (do
                 (explosion/explosion canvas enemy true)
@@ -59,6 +61,18 @@
                 (state/add-score! 100)
                 )
 
+              (let [pos (:pos boid)
+                    ax (Math/abs (vec2/get-x pos))
+                    ay (Math/abs (vec2/get-y pos))
+                    gutter 64
+                    hw (+ gutter (/ (.-innerWidth js/window) 2))
+                    hh (+ gutter (/ (.-innerHeight js/window) 2))]
+                (or (> ax hw) (> ay hh)))
+              ;; far off screen
+              (do (spatial/remove-from-spatial :default skey (vec2/as-vector (:pos boid)))
+                  (remove! ekey))
+
+              :default
               ;; alive!
               (let [next-boid (update-in
                                (if (< (rand) 0.3)
