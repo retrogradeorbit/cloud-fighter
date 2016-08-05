@@ -2,6 +2,7 @@
   (:require [infinitelives.utils.vec2 :as vec2]
             [infinitelives.utils.events :as e]
             [infinitelives.utils.boid :as b]
+            [infinitelives.utils.math :as math]
             [infinitelives.utils.spatial :as spatial]
             [infinitelives.pixi.sprite :as s]
             [cloud-fighter.state :as state]
@@ -19,12 +20,30 @@
 (defn remove! [ekey]
   (swap! enemies dissoc ekey))
 
+(defn count-enemies []
+  (count @enemies))
+
 (defn spawn [canvas]
   (go
-    (let [start-pos (-> (vec2/random-unit)
-                        (vec2/scale 500)
-                                        ;(vec2/add (:pos @state/state))
-                        )
+    (let [gutter 32
+          hw (+ gutter (/ (.-innerWidth js/window) 2))
+          hh (+ gutter (/ (.-innerHeight js/window) 2))
+          start-pos (case (math/rand-between 1 4)
+                      1 ;; top
+                      (vec2/vec2 (math/rand-between (- hw) hw) (- hh))
+
+                      2 ;; bottom
+                      (vec2/vec2 (math/rand-between (- hw) hw) hh)
+
+                      3 ;; left
+                      (vec2/vec2 (- hw) (math/rand-between (- hh) hh))
+
+                      4 ;; right
+                      (vec2/vec2 hw (math/rand-between (- hh) hh)))
+          start-dir (-> start-pos
+                        (vec2/scale -1)
+                        (vec2/unit)
+                        (vec2/rotate (rand)))
           ekey (keyword (gensym))
           skey [:enemy ekey]]
       (m/with-sprite canvas :enemy
@@ -34,8 +53,8 @@
                               )]
         (add! ekey enemy)
         (spatial/add-to-spatial! :default skey (vec2/as-vector start-pos))
-        (loop [boid {:mass 10.0 :pos start-pos :vel (vec2/zero)
-                     :max-force 1.0 :max-speed 4.0}]
+        (loop [boid {:mass 10.0 :pos start-pos :vel start-dir
+                     :max-force 1.0 :max-speed 3.0}]
           (s/set-pos! enemy (:pos boid))
           (s/set-rotation! enemy (+ (vec2/heading (:vel boid)) (/ Math/PI 2)))
           (<! (e/next-frame))
@@ -68,7 +87,7 @@
                     hw (+ gutter (/ (.-innerWidth js/window) 2))
                     hh (+ gutter (/ (.-innerHeight js/window) 2))]
                 (or (> ax hw) (> ay hh)))
-              ;; far off screen
+              ;; off screen
               (do (spatial/remove-from-spatial :default skey (vec2/as-vector (:pos boid)))
                   (remove! ekey))
 
@@ -77,7 +96,7 @@
               (let [next-boid (update-in
                                (if (< (rand) 0.3)
                                  (b/seek boid (vec2/zero))
-                                 (b/wander boid 6 3 0.1))
+                                 (b/wander boid 8 4 0.5))
                                [:pos] vec2/sub (:vel @state/state))]
                 (spatial/move-in-spatial :default skey
                                          (vec2/as-vector (:pos boid))
