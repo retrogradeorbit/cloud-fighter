@@ -113,6 +113,17 @@
         (when (pos? f)
           (recur (dec f)))))))
 
+(defn game-over [canvas heading]
+  (go
+    (m/with-sprite canvas :ui
+      [player-one-text (pf/make-text :small "Game Over" :scale 3 :x 0 :y 0
+                                     :tint 0xff4080)]
+      (loop [f 200]
+        (state/update-pos! (vec2/scale heading player-speed))
+        (<! (e/next-frame))
+        (when (pos? f)
+          (recur (dec f)))))))
+
 (defn update-lives-icons! [lives-set]
   (doseq [n (range (state/get-lives))] (s/set-visible! (nth lives-set n) true))
   (doseq [n (range (state/get-lives) 9)] (s/set-visible! (nth lives-set n) false)))
