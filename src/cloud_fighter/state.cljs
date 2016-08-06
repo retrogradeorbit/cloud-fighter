@@ -12,6 +12,13 @@
     :score 0
     }))
 
+(defn reset-state! []
+  (swap! state assoc
+         :vel (vec2/vec2 0 -1)
+         :alive? true
+         :lives 3
+         :score 0))
+
 (defn update-pos! [vel]
   (swap! state
          #(-> %
