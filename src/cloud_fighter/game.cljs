@@ -212,4 +212,6 @@
               (state/alive-player!)
               (s/set-visible! player true))
 
+            (<! (get-ready canvas heading))
+
             (recur heading true)))))))
