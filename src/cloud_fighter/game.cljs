@@ -100,38 +100,39 @@
               (recur l (+ xp w 1.0 koff) yp c)
               (s/set-pivot! batch (/ (+ xp w koff) 2.0) 0))))))))
 
+(defn update-lives-icons! [lives-set]
+  (doseq [n (range (state/get-lives))] (s/set-visible! (nth lives-set n) true))
+  (doseq [n (range (state/get-lives) 9)] (s/set-visible! (nth lives-set n) false)))
+
+(defn lives-icon-display [canvas]
+  (go
+      (m/with-sprite-set canvas :lives
+        [lives-set (for [n (range 9)] (s/make-sprite :player :scale 3 :x (+ 40 (* 60 n)) :y -40))]
+        (update-lives-icons! lives-set)
+        (while true
+          (<! (e/next-frame))
+          (update-lives-icons! lives-set)))))
+
+(defn score-display [canvas]
+  (go
+    (m/with-sprite canvas :score
+      [score-text (pf/make-text :small (-> @state/state :score str)
+                                :scale 3
+                                :x 100 :y 16)]
+      (loop [score (:score @state/state)]
+        (<! (e/next-frame))
+        (let [new-score (:score @state/state)]
+          (when (not= new-score score)
+            (.removeChildren score-text)
+            (change-text! score-text :small (str new-score)))
+          (recur new-score))))))
+
 (defn run [canvas player]
   (go
     ;; new spatial hash
     (spatial/new-spatial! :default 64)
-
-    ;; lives icons
-    (go
-      (m/with-sprite-set canvas :lives
-        [lives-set (for [n (range 9)] (s/make-sprite :player :scale 3 :x (+ 40 (* 60 n)) :y -40))]
-        (doseq [n (range (state/get-lives))] (s/set-visible! (nth lives-set n) true))
-        (doseq [n (range (state/get-lives) 9)] (s/set-visible! (nth lives-set n) false))
-        (while true
-          (<! (e/next-frame))
-          (doseq [n (range (state/get-lives))] (s/set-visible! (nth lives-set n) true))
-          (doseq [n (range (state/get-lives) 9)] (s/set-visible! (nth lives-set n) false))
-          )
-        ))
-
-    ;; score
-    (go
-      (m/with-sprite canvas :score
-        [score-text (pf/make-text :small (-> @state/state :score str)
-                             :scale 3
-                             :x 100 :y 16)]
-        (loop [score (:score @state/state)]
-          (<! (e/next-frame))
-          (let [new-score (:score @state/state)]
-            (when (not= new-score score)
-              (.removeChildren score-text)
-              (change-text! score-text :small (str new-score)))
-            (recur new-score)))
-        ))
+    (lives-icon-display canvas)
+    (score-display canvas)
 
     ;; loop forever
     (loop [heading (vec2/vec2 0 -1)
