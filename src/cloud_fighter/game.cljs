@@ -100,6 +100,19 @@
               (recur l (+ xp w 1.0 koff) yp c)
               (s/set-pivot! batch (/ (+ xp w koff) 2.0) 0))))))))
 
+(defn get-ready [canvas heading]
+  (go
+    (m/with-sprite canvas :ui
+      [player-one-text (pf/make-text :small "Player One" :scale 3 :x 0 :y -116
+                                     :tint 0xff4080)
+       get-ready-text (pf/make-text :small "Get Ready" :scale 3 :x 0 :y 100
+                                    :tint 0xff4080)]
+      (loop [f 200]
+        (state/update-pos! (vec2/scale heading player-speed))
+        (<! (e/next-frame))
+        (when (pos? f)
+          (recur (dec f)))))))
+
 (defn update-lives-icons! [lives-set]
   (doseq [n (range (state/get-lives))] (s/set-visible! (nth lives-set n) true))
   (doseq [n (range (state/get-lives) 9)] (s/set-visible! (nth lives-set n) false)))
