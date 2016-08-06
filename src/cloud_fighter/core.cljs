@@ -28,7 +28,7 @@
 (devtools/install!)
 
 (def sky-colour 0xa0a0f0)
-(def title-scale 2)st
+(def title-scale 2)
 (def title-ypos -300)
 (def title-word-separation 100)
 (def font-scale 2)
