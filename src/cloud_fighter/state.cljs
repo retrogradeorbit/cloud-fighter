@@ -24,8 +24,22 @@
               (update-in [:pos] vec2/add (vec2/vec2 0 -4))
               (assoc :vel (vec2/vec2 0 -4)))))
 
+(defn alive-player! []
+  (swap! state assoc :alive? true))
+
 (defn kill-player! []
   (swap! state assoc :alive? false))
+
+(defn dec-lives! []
+  (:lives (swap! state update-in [:lives] dec)))
+
+(defn inc-lives! []
+  (:lives (swap! state update-in [:lives]
+                 ;; 9 lives is maximum
+                 #(-> % dec (max 0) (min 9)))))
+
+(defn get-lives []
+  (:lives @state))
 
 (defn add-score! [score]
   (swap! state update-in [:score] + score))

@@ -107,10 +107,15 @@
 
     ;; lives icons
     (go
-      (m/with-sprite canvas :lives
-        [lives (s/make-sprite :player :scale 3 :x 40 :y -40)
-         lives-2 (s/make-sprite :player :scale 3 :x (+ 40 60) :y -40)]
-        (while true (<! (e/next-frame)))
+      (m/with-sprite-set canvas :lives
+        [lives-set (for [n (range 9)] (s/make-sprite :player :scale 3 :x (+ 40 (* 60 n)) :y -40))]
+        (doseq [n (range (state/get-lives))] (s/set-visible! (nth lives-set n) true))
+        (doseq [n (range (state/get-lives) 9)] (s/set-visible! (nth lives-set n) false))
+        (while true
+          (<! (e/next-frame))
+          (doseq [n (range (state/get-lives))] (s/set-visible! (nth lives-set n) true))
+          (doseq [n (range (state/get-lives) 9)] (s/set-visible! (nth lives-set n) false))
+          )
         ))
 
     ;; score
@@ -138,7 +143,7 @@
         (when (and fire (not last-fire))
           (bullet/spawn-bullet! canvas heading 10 60))
 
-        (when (< (enemy/count-enemies) 8)
+        (when (and (:alive? @state/state) (< (enemy/count-enemies) 8))
           (enemy/spawn canvas))
 
         (when (events/is-pressed? :s)
@@ -183,4 +188,14 @@
           (recur (turned-heading heading) fire)
 
           ;; dead
-          (recur heading true))))))
+          (do
+            (loop [f 200]
+              (state/update-pos! (vec2/scale heading player-speed))
+              (<! (e/next-frame))
+              (when (pos? f) (recur (dec f))))
+
+            (let [new-lives (state/dec-lives!)]
+              (state/alive-player!)
+              (s/set-visible! player true))
+
+            (recur heading true)))))))
