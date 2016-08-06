@@ -240,8 +240,14 @@
             [player (s/make-sprite :player :scale scale :x 0 :y 0)]
 
             (parallax/cloud-thread clouds)
-            (<! (titlescreen canvas))
-            (<! (game/run canvas player)))
+
+            (loop []
+              (s/set-visible! player true)
+              (s/set-rotation! player 0)
+              (state/reset-state!)
+              (<! (titlescreen canvas))
+              (<! (game/run canvas player))
+              (recur)))
 
           )))
 
