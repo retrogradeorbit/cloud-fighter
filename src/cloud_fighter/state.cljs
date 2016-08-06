@@ -10,6 +10,7 @@
     :alive? true
     :lives 3
     :score 0
+    :playing? false
     }))
 
 (defn reset-state! []
@@ -17,7 +18,14 @@
          :vel (vec2/vec2 0 -1)
          :alive? true
          :lives 3
-         :score 0))
+         :score 0
+         :playing? false))
+
+(defn playing? []
+  (:playing? @state))
+
+(defn play! [play]
+  (swap! state assoc :playing? play))
 
 (defn update-pos! [vel]
   (swap! state

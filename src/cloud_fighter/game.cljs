@@ -129,7 +129,7 @@
   (doseq [n (range (state/get-lives) 9)] (s/set-visible! (nth lives-set n) false)))
 
 (defn lives-icon-display [canvas]
-  (go
+  (go-while (state/playing?)
       (m/with-sprite-set canvas :lives
         [lives-set (for [n (range 9)] (s/make-sprite :player :scale 3 :x (+ 40 (* 60 n)) :y -40))]
         (update-lives-icons! lives-set)
@@ -138,7 +138,7 @@
           (update-lives-icons! lives-set)))))
 
 (defn score-display [canvas]
-  (go
+  (go-while (state/playing?)
     (m/with-sprite canvas :score
       [score-text (pf/make-text :small (-> @state/state :score str)
                                 :scale 3
@@ -155,6 +155,7 @@
   (go
     ;; new spatial hash
     (spatial/new-spatial! :default 64)
+    (state/play! true)
     (lives-icon-display canvas)
     (score-display canvas)
 
@@ -221,7 +222,9 @@
 
             (if (zero? (state/get-lives))
               ;; game over
-              (<! (game-over canvas heading))
+              (do
+                (<! (game-over canvas heading))
+                (state/play! false))
 
               ;; next life
               (let [new-lives (state/dec-lives!)]
