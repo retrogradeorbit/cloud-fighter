@@ -219,10 +219,13 @@
               (<! (e/next-frame))
               (when (pos? f) (recur (dec f))))
 
-            (let [new-lives (state/dec-lives!)]
-              (state/alive-player!)
-              (s/set-visible! player true))
+            (if (zero? (state/get-lives))
+              ;; game over
+              (<! (game-over canvas heading))
 
-            (<! (get-ready canvas heading))
-
-            (recur heading true)))))))
+              ;; next life
+              (let [new-lives (state/dec-lives!)]
+                (state/alive-player!)
+                (s/set-visible! player true)
+                (<! (get-ready canvas heading))
+                (recur heading true)))))))))
