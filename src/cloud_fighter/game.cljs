@@ -192,18 +192,22 @@
         (when (events/is-pressed? :q)
           (while (events/is-pressed? :q)
             (<! (e/next-frame)))
-          (explosion/explosion canvas player true))
+          (explosion/explosion canvas player true false))
 
         ;; check for collision with spatial
         (when
             (and (:alive? @state/state)
-                 (:enemy (->>
-                          (spatial/query (:default @spatial/spatial-hashes)
-                                         [-50 -50] [50 50])
-                          keys
-                          (map first)
-                          (into #{}))))
-          (explosion/explosion canvas player false)
+                 (let [collided-set (->>
+                                     (spatial/query (:default @spatial/spatial-hashes)
+                                                    [-50 -50] [50 50])
+                                     keys
+                                     (map first)
+                                     (into #{}))]
+                   (or (:enemy collided-set) (:enemy-bullet collided-set))))
+
+          ;; TODO: remove enemy-bullet when collided with bullet
+
+          (explosion/explosion canvas player false false)
           (state/kill-player!)
           )
 
