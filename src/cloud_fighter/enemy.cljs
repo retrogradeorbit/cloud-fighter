@@ -119,7 +119,7 @@
               (pos? (count matched))
               ;; shot!
               (do
-                (explosion/explosion canvas enemy true)
+                (explosion/explosion canvas enemy true false)
                 (bullet/remove! (-> matched first second))
                 (spatial/remove-from-spatial :default skey (vec2/as-vector (:pos boid)))
                 (remove! ekey)
