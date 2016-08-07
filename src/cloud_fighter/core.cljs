@@ -37,7 +37,10 @@
 (def spritesheet-assets
   {:player {:pos [0 0] :size [32 32]}
    :bullet {:pos [32 0] :size [16 16]}
+   :missile {:pos [32 16] :size [16 16]}
    :enemy {:pos [48 0] :size [32 32]}
+   :parachute {:pos [80 0] :size [32 32]}
+   :blimp {:pos [112 0] :size [48 32]}
    :explode-1 {:pos [0 32] :size [32 32]}
    :explode-2 {:pos [32 32] :size [32 32]}
    :explode-3 {:pos [64 32] :size [32 32]}
@@ -45,6 +48,16 @@
    :explode-5 {:pos [128 32] :size [32 32]}
    :explode-6 {:pos [160 32] :size [32 32]}
    :explode-7 {:pos [192 32] :size [32 32]}
+   :pop-1 {:pos [0 64] :size [16 16]}
+   :pop-2 {:pos [16 64] :size [16 16]}
+   :pop-3 {:pos [32 64] :size [16 16]}
+   :pop-4 {:pos [48 64] :size [16 16]}
+   :small-explosion-1 {:pos [0 80] :size [16 16]}
+   :small-explosion-2 {:pos [16 80] :size [16 16]}
+   :small-explosion-3 {:pos [32 80] :size [16 16]}
+   :small-explosion-4 {:pos [48 80] :size [16 16]}
+   :small-explosion-5 {:pos [60 80] :size [16 16]}
+   :small-explosion-6 {:pos [72 80] :size [16 16]}
 })
 
 (defonce canvas
