@@ -11,6 +11,8 @@
             [cloud-fighter.state :as state]
             [cloud-fighter.explosion :as explosion]
             [cloud-fighter.bullet :as bullet]
+            [cloud-fighter.score :as score]
+            [cloud-fighter.parachute :as parachute]
             [infinitelives.utils.gamepad :as gp]
             [cljs.core.async :refer [<!]])
   (:require-macros [cljs.core.async.macros :refer [go]]
@@ -172,16 +174,19 @@
         (when (and (:alive? @state/state) (< (enemy/count-enemies) 8))
           (enemy/spawn canvas))
 
+        (when (and (zero? (parachute/count-parachutes)) (< (rand) 0.01))
+          (parachute/spawn canvas))
+
         (when (events/is-pressed? :s)
           (while (events/is-pressed? :s)
             (<! (e/next-frame)))
           (log (str
                 #_ (->>
-                 (spatial/query (:default @spatial/spatial-hashes)
-                                [-50 -50] [50 50])
-                 keys
-                 (map first)
-                 (into #{}))
+                    (spatial/query (:default @spatial/spatial-hashes)
+                                   [-50 -50] [50 50])
+                    keys
+                    (map first)
+                    (into #{}))
 
                 #_ (:hash (:default @spatial/spatial-hashes))
 
@@ -195,21 +200,29 @@
           (explosion/explosion canvas player true false))
 
         ;; check for collision with spatial
-        (when
-            (and (:alive? @state/state)
-                 (let [collided-set (->>
-                                     (spatial/query (:default @spatial/spatial-hashes)
-                                                    [-50 -50] [50 50])
-                                     keys
-                                     (map first)
-                                     (into #{}))]
-                   (or (:enemy collided-set) (:enemy-bullet collided-set))))
+        (let [collided-objs (->>
+                            (spatial/query (:default @spatial/spatial-hashes)
+                                           [-50 -50] [50 50])
+                            keys)
+              collided-set (->> collided-objs
+                                (map first)
+                                (into #{}))]
+          (when
+              (and (:alive? @state/state)
+                   (or (:enemy collided-set) (:enemy-bullet collided-set)))
 
-          ;; TODO: remove enemy-bullet when collided with bullet
+            ;; TODO: remove enemy-bullet when collided with bullet
+            (explosion/explosion canvas player false false)
+            (state/kill-player!))
 
-          (explosion/explosion canvas player false false)
-          (state/kill-player!)
-          )
+          (when (:parachute collided-set)
+            (let [pkey (->> collided-objs
+                            (group-by first)
+                            :parachute
+                            first
+                            second)]
+              ;; removing the key triggers the score and parachute disappear
+              (parachute/remove! pkey))))
 
         (<! (e/next-frame))
 
