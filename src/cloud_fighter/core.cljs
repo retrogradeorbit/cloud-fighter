@@ -245,9 +245,9 @@
 
     (let [clouds (parallax/get-sprites)]
       (m/with-sprite-set canvas :clouds-lower
-        [clouds-lower (take 15 clouds)]
+        [clouds-lower (take 20 clouds)]
         (m/with-sprite-set canvas :clouds-upper
-          [clouds-upper (drop 15 clouds)]
+          [clouds-upper (drop 20 clouds)]
           (doseq [c clouds-upper] (s/set-alpha! c 0.7))
           (m/with-sprite canvas :player
             [player (s/make-sprite :player :scale scale :x 0 :y 0)]
