@@ -97,6 +97,14 @@
           (s/set-rotation! enemy (+ (vec2/heading (:vel boid)) (/ Math/PI 2)))
           (<! (e/next-frame))
 
+          ;; random shoot? TODO: only shoot when we are pointed
+          ;; (somewhat) at the player
+          (let [prob (rand)]
+            (cond (< prob bullet-probability)
+                  (spawn-bullet! canvas (:pos boid) (:vel boid) bullet-speed bullet-life)
+
+                  (< bullet-probability prob (+ bullet-probability missile-probability))
+                  (missile/spawn canvas (:pos boid) (:vel boid) missile-life)))
 
 
           ;; check for collision
