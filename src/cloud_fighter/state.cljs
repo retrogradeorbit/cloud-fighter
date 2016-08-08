@@ -11,6 +11,8 @@
     :lives 3
     :score 0
     :playing? false
+    :shot-count 0
+    :max-shot 8
     }))
 
 (defn reset-state! []
@@ -19,7 +21,19 @@
          :alive? true
          :lives 3
          :score 0
-         :playing? false))
+         :playing? false
+         :shot-count 0
+         :max-shot 8
+         ))
+
+(defn shot! []
+  (swap! state
+         update-in [:shot-count]
+         #(-> % inc (min (:max-shot @state)))))
+
+(defn max-shot-reached? []
+  (let [{:keys [max-shot shot-count]} @state]
+    (= max-shot shot-count)))
 
 (defn playing? []
   (:playing? @state))
