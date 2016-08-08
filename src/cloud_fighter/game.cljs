@@ -153,6 +153,26 @@
             (change-text! score-text :small (str new-score)))
           (recur new-score))))))
 
+(defn get-shot-string []
+  (str (:shot-count @state/state) "/" (:max-shot @state/state)))
+
+(defn shot-count-display [canvas]
+  (go-while (state/playing?)
+            (m/with-sprite canvas :count
+              [shot-count-text
+               (pf/make-text
+                :small (get-shot-string)
+                :scale 3 :x -100 :y 16)]
+              (loop [shot-count (:shot-count @state/state)]
+                (<! (e/next-frame))
+                (let [new-shot-count (:shot-count @state/state)]
+                  (when (not= new-shot-count shot-count)
+                    (.removeChildren shot-count-text)
+                    (change-text!
+                     shot-count-text
+                     :small (get-shot-string)))
+                  (recur new-shot-count))))))
+
 (defn run [canvas player]
   (go
     ;; new spatial hash
@@ -160,6 +180,7 @@
     (state/play! true)
     (lives-icon-display canvas)
     (score-display canvas)
+    (shot-count-display canvas)
 
     ;; loop forever
     (loop [heading (vec2/vec2 0 -1)
