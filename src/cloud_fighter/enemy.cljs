@@ -124,6 +124,7 @@
                 (spatial/remove-from-spatial :default skey (vec2/as-vector (:pos boid)))
                 (remove! ekey)
                 (state/add-score! 100)
+                (state/shot!)
                 )
 
               (let [pos (:pos boid)
