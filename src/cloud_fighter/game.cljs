@@ -13,6 +13,7 @@
             [cloud-fighter.bullet :as bullet]
             [cloud-fighter.score :as score]
             [cloud-fighter.parachute :as parachute]
+            [cloud-fighter.boss :as boss]
             [infinitelives.utils.gamepad :as gp]
             [cljs.core.async :refer [<!]])
   (:require-macros [cljs.core.async.macros :refer [go]]
@@ -197,6 +198,9 @@
 
         (when (and (zero? (parachute/count-parachutes)) (< (rand) 0.01))
           (parachute/spawn canvas))
+
+        (when (and (zero? (boss/count-bosses)) (state/max-shot-reached?))
+          (boss/spawn canvas))
 
         (when (events/is-pressed? :s)
           (while (events/is-pressed? :s)
