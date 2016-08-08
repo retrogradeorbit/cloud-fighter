@@ -236,8 +236,8 @@
                            "img/fonts.png"
                            "img/sprites.png"]))
 
-    (pf/pixel-font :small "img/fonts.png" [16 65] [238 111]
-                   :chars ["ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    (pf/pixel-font :small "img/fonts.png" [16 65] [250 111]
+                   :chars ["ABCDEFGHIJKLMNOPQRSTUVWXYZ/"
                            "abcdefghijklmnopqrstuvwxyz"
                            "0123456789!?#`'.,←→↑↓˽"]
                    :kerning {"fo" -2  "ro" -1 "la" -1 }
