@@ -61,11 +61,13 @@
 })
 
 (defonce canvas
-  (c/init {:layers [:clouds-lower :bullets :enemy :player :clouds-upper :lives :score :ui]
+  (c/init {:layers [:clouds-lower :bullets :enemy
+                    :player :lives :score :count :ui]
            :background sky-colour
            :expand true
            :origins {:lives :bottom-left
-                     :score :top-left}}))
+                     :score :top-left
+                     :count :top-right}}))
 
 (defn start? []
   (or
@@ -245,24 +247,21 @@
 
     (let [clouds (parallax/get-sprites)]
       (m/with-sprite-set canvas :clouds-lower
-        [clouds-lower (take 20 clouds)]
-        (m/with-sprite-set canvas :clouds-upper
-          [clouds-upper (drop 20 clouds)]
-          (doseq [c clouds-upper] (s/set-alpha! c 0.7))
-          (m/with-sprite canvas :player
-            [player (s/make-sprite :player :scale scale :x 0 :y 0)]
+        [clouds-lower clouds]
+        (m/with-sprite canvas :player
+          [player (s/make-sprite :player :scale scale :x 0 :y 0)]
 
-            (parallax/cloud-thread clouds)
+          (parallax/cloud-thread clouds)
 
-            (loop []
-              (s/set-visible! player true)
-              (s/set-rotation! player 0)
-              (state/reset-state!)
-              (<! (titlescreen canvas))
-              (<! (game/run canvas player))
-              (recur)))
+          (loop []
+            (s/set-visible! player true)
+            (s/set-rotation! player 0)
+            (state/reset-state!)
+            (<! (titlescreen canvas))
+            (<! (game/run canvas player))
+            (recur)))
 
-          )))
+          ))
 
 
     ))
