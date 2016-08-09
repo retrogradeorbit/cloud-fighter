@@ -296,3 +296,17 @@
 
 (defn add-score! [score]
   (swap! state update-in [:score] + score))
+
+(defn load-level [state level]
+  (-> state
+      (into (levels level))
+      (assoc :level level)
+      (assoc :shot-count 0)))
+
+(defn level-up! []
+  (swap! state
+         #(let [new-level (inc (:level %))]
+            (load-level % new-level))))
+
+(defn level-0! []
+  (swap! state load-level 0))
