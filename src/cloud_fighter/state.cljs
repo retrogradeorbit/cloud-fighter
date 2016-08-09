@@ -317,7 +317,10 @@
                     (and (not= old-mult new-mult))))]
              (-> old-state
                  (assoc :score new-score)
-                 (update-in [:lives] + (if new-life 1 0)))))))
+                 (update-in [:lives] + (if new-life 1 0))
+
+                 ;; no more than 9 lives
+                 (update-in [:lives] min 9))))))
 
 (defn load-level [state level]
   (-> state
