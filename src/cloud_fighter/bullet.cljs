@@ -23,7 +23,7 @@
         bkey (keyword (gensym))
         skey [:bullet bkey]]
     (go
-      (m/with-sprite canvas :bullets
+      (m/with-sprite canvas :player
         [bullet (s/make-sprite :bullet :scale 4 :x 0 :y 0)]
         (swap! bullets assoc bkey bullet)
         (spatial/add-to-spatial! :default skey (vec2/as-vector initial-pos))
