@@ -61,13 +61,14 @@
 })
 
 (defonce canvas
-  (c/init {:layers [:clouds-lower :bullets :enemy
-                    :player :lives :score :count :ui]
+  (c/init {:layers [:clouds-lower :enemy
+                    :player :lives :score :count :level :ui]
            :background sky-colour
            :expand true
            :origins {:lives :bottom-left
                      :score :top-left
-                     :count :top-right}}))
+                     :count :top-right
+                     :level :bottom-right}}))
 
 (defn start? []
   (or
@@ -256,7 +257,11 @@
           (loop []
             (s/set-visible! player true)
             (s/set-rotation! player 0)
+
             (state/reset-state!)
+            (state/level-0!)
+            (set! (.-backgroundColor (:renderer canvas)) (:background @state/state))
+
             (<! (titlescreen canvas))
             (<! (game/run canvas player))
             (recur)))
