@@ -22,9 +22,6 @@
                    [infinitelives.pixi.pixelfont :as pf])
 )
 
-(def rotate-speed 0.05)
-(def player-speed 4)
-
 (defn direction []
   (let [gamepad (vec2/vec2 (or (gp/axis 0) 0)
                            (or (gp/axis 1) 0))]
@@ -64,14 +61,14 @@
 
       ;; turn right
       (pos? dot)
-      (let [turned (vec2/rotate heading rotate-speed)
+      (let [turned (vec2/rotate heading (:rotate-speed @state/state))
             dot (side-dot turned dir)]
         ;; if new dot is now negative, weve overturned
         (if (neg? dot) heading turned))
 
       ;; turn left
       (neg? dot)
-      (let [turned (vec2/rotate heading (- rotate-speed))
+      (let [turned (vec2/rotate heading (- (:rotate-speed @state/state)))
             dot (side-dot turned dir)]
         ;; if new dot is now posative, weve overturned
         (if (pos? dot) heading turned))
@@ -111,7 +108,7 @@
        get-ready-text (pf/make-text :small "Get Ready" :scale 3 :x 0 :y 100
                                     :tint 0xff4080)]
       (loop [f 200]
-        (state/update-pos! (vec2/scale heading player-speed))
+        (state/update-pos! (vec2/scale heading (:player-speed @state/state)))
         (<! (e/next-frame))
         (when (pos? f)
           (recur (dec f)))))))
@@ -122,7 +119,7 @@
       [player-one-text (pf/make-text :small "Game Over" :scale 3 :x 0 :y 0
                                      :tint 0xff4080)]
       (loop [f 200]
-        (state/update-pos! (vec2/scale heading player-speed))
+        (state/update-pos! (vec2/scale heading (:player-speed @state/state)))
         (<! (e/next-frame))
         (when (pos? f)
           (recur (dec f)))))))
@@ -154,6 +151,20 @@
             (change-text! score-text :small (str new-score)))
           (recur new-score))))))
 
+(defn level-display [canvas]
+  (go-while (state/playing?)
+    (m/with-sprite canvas :level
+      [level-text (pf/make-text :small (->> @state/state :level inc str)
+                                :scale 3
+                                :x -32 :y -48)]
+      (loop [level (inc (:level @state/state))]
+        (<! (e/next-frame))
+        (let [new-level (inc (:level @state/state))]
+          (when (not= new-level level)
+            (.removeChildren level-text)
+            (change-text! level-text :small (str new-level)))
+          (recur new-level))))))
+
 (defn get-shot-string []
   (str (:shot-count @state/state) "/" (:max-shot @state/state)))
 
@@ -178,51 +189,34 @@
   (go
     ;; new spatial hash
     (spatial/new-spatial! :default 64)
+    (state/level-0!)
+    (set! (.-backgroundColor (:renderer canvas)) (:background @state/state))
     (state/play! true)
     (lives-icon-display canvas)
     (score-display canvas)
+    (level-display canvas)
     (shot-count-display canvas)
 
     ;; loop forever
     (loop [heading (vec2/vec2 0 -1)
            last-fire false]
       (let [fire (fire?)]
-        (state/update-pos! (vec2/scale heading player-speed))
+        (state/update-pos! (vec2/scale heading (:player-speed @state/state)))
         (s/set-rotation! player (vec2/heading (vec2/rotate-90 heading)))
 
         (when (and fire (not last-fire))
           (bullet/spawn-bullet! canvas heading 10 60))
 
-        (when (and (:alive? @state/state) (< (enemy/count-enemies) 8))
+        (when (and (:alive? @state/state) (< (enemy/count-enemies)
+                                             (:num-enemies @state/state)))
           (enemy/spawn canvas))
 
-        (when (and (zero? (parachute/count-parachutes)) (< (rand) 0.01))
+        (when (and (< (parachute/count-parachutes) (:num-parachutes @state/state))
+                   (< (rand) (:parachute-prob @state/state)))
           (parachute/spawn canvas))
 
         (when (and (zero? (boss/count-bosses)) (state/max-shot-reached?))
           (boss/spawn canvas))
-
-        (when (events/is-pressed? :s)
-          (while (events/is-pressed? :s)
-            (<! (e/next-frame)))
-          (log (str
-                #_ (->>
-                    (spatial/query (:default @spatial/spatial-hashes)
-                                   [-50 -50] [50 50])
-                    keys
-                    (map first)
-                    (into #{}))
-
-                #_ (:hash (:default @spatial/spatial-hashes))
-
-                @bullet/bullets
-                ))
-          )
-
-        (when (events/is-pressed? :q)
-          (while (events/is-pressed? :q)
-            (<! (e/next-frame)))
-          (explosion/explosion canvas player true false))
 
         ;; check for collision with spatial
         (let [collided-objs (->>
@@ -234,7 +228,8 @@
                                 (into #{}))]
           (when
               (and (:alive? @state/state)
-                   (or (:enemy collided-set) (:enemy-bullet collided-set)))
+                   (or (:enemy collided-set) (:enemy-bullet collided-set)
+                       (:boss collided-set)))
 
             ;; TODO: remove enemy-bullet when collided with bullet
             (explosion/explosion canvas player false false)
@@ -258,7 +253,7 @@
           ;; dead
           (do
             (loop [f 200]
-              (state/update-pos! (vec2/scale heading player-speed))
+              (state/update-pos! (vec2/scale heading (:player-speed @state/state)))
               (<! (e/next-frame))
               (when (pos? f) (recur (dec f))))
 
