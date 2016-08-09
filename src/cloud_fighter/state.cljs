@@ -301,7 +301,23 @@
   (:lives @state))
 
 (defn add-score! [score]
-  (swap! state update-in [:score] + score))
+  (swap! state
+         (fn [old-state]
+           (let [old-score (:score old-state)
+                 new-score (+ score old-score)
+                 new-life
+                 (or
+                  ;; extra life at 10000
+                  (and (< old-score 10000) (>= new-score 10000))
+                  (let [old-adj (- old-score 10000)
+                        new-adj (- new-score 10000)
+                        ;; and every 50000 after that
+                        old-mult (int (/ old-adj 50000))
+                        new-mult (int (/ new-adj 50000))]
+                    (and (not= old-mult new-mult))))]
+             (-> old-state
+                 (assoc :score new-score)
+                 (update-in [:lives] + (if new-life 1 0)))))))
 
 (defn load-level [state level]
   (-> state
