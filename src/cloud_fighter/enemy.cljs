@@ -13,12 +13,6 @@
   (:require-macros [cljs.core.async.macros :refer [go]]
                    [infinitelives.pixi.macros :as m]))
 
-(def bullet-speed 5)
-(def bullet-life 200)
-(def bullet-probability 0.001)
-(def missile-probability 0.001)
-(def missile-life 300)
-
 (defonce enemies (atom {}))
 
 (defn add! [ekey enemy]
@@ -85,14 +79,11 @@
           ekey (keyword (gensym))
           skey [:enemy ekey]]
       (m/with-sprite canvas :enemy
-        [enemy (s/make-sprite :enemy :scale 2
-                                        ;:x (vec2/get-x start-pos)
-                                        ;:y (vec2/get-y start-pos)
-                              )]
+        [enemy (s/make-sprite (:enemy-texture @state/state) :scale 2)]
         (add! ekey enemy)
         (spatial/add-to-spatial! :default skey (vec2/as-vector start-pos))
         (loop [boid {:mass 10.0 :pos start-pos :vel start-dir
-                     :max-force 1.0 :max-speed 3.0}]
+                     :max-force 1.0 :max-speed (:enemy-speed @state/state)}]
           (s/set-pos! enemy (:pos boid))
           (s/set-rotation! enemy (+ (vec2/heading (:vel boid)) (/ Math/PI 2)))
           (<! (e/next-frame))
@@ -100,11 +91,11 @@
           ;; random shoot? TODO: only shoot when we are pointed
           ;; (somewhat) at the player
           (let [prob (rand)]
-            (cond (< prob bullet-probability)
-                  (spawn-bullet! canvas (:pos boid) (:vel boid) bullet-speed bullet-life)
+            (cond (< prob (:enemy-bullet-probability @state/state))
+                  (spawn-bullet! canvas (:pos boid) (:vel boid) (:enemy-bullet-speed @state/state) (:enemy-bullet-life @state/state))
 
-                  (< bullet-probability prob (+ bullet-probability missile-probability))
-                  (missile/spawn canvas (:pos boid) (:vel boid) missile-life)))
+                  (< (:enemy-bullet-probability @state/state) prob (+ (:enemy-bullet-probability @state/state) (:enemy-missile-probability @state/state)))
+                  (missile/spawn canvas (:pos boid) (:vel boid) (:enemy-missile-life @state/state))))
 
 
           ;; check for collision
@@ -123,7 +114,7 @@
                 (bullet/remove! (-> matched first second))
                 (spatial/remove-from-spatial :default skey (vec2/as-vector (:pos boid)))
                 (remove! ekey)
-                (state/add-score! 100)
+                (state/add-score! (:enemy-score @state/state))
                 (state/shot!)
                 )
 
@@ -141,9 +132,13 @@
               :default
               ;; alive!
               (let [next-boid (update-in
-                               (if (< (rand) 0.3)
+                               (if (< (rand) (:enemy-seek-proportion @state/state))
                                  (b/seek boid (vec2/zero))
-                                 (b/wander boid 8 4 0.5))
+                                 (b/wander boid
+                                           (:enemy-wander-a @state/state)
+                                           (:enemy-wander-b @state/state)
+                                           (:enemy-wander-c @state/state)
+                                           ))
                                [:pos] vec2/sub (:vel @state/state))]
                 (spatial/move-in-spatial :default skey
                                          (vec2/as-vector (:pos boid))
