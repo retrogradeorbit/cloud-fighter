@@ -236,7 +236,10 @@
     :score 0
     :playing? false
     :shot-count 0
-    :max-shot 8
+    :max-shot 2
+    :level 0
+    :rotate-speed 0.05
+    :player-speed 4
     }))
 
 (defn reset-state! []
@@ -247,7 +250,10 @@
          :score 0
          :playing? false
          :shot-count 0
-         :max-shot 8
+         :max-shot 2
+         :level 0
+         :rotate-speed 0.05
+         :player-speed 4
          ))
 
 (defn shot! []
