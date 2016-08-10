@@ -1,5 +1,6 @@
 (ns cloud-fighter.state
-  (:require [infinitelives.utils.vec2 :as vec2]))
+  (:require [infinitelives.utils.vec2 :as vec2]
+            [infinitelives.utils.sound :as sound]))
 
 (def levels
   [
@@ -315,6 +316,7 @@
                         old-mult (int (/ old-adj 50000))
                         new-mult (int (/ new-adj 50000))]
                     (and (not= old-mult new-mult))))]
+             (when new-life (sound/play-sound :one-up 0.5 false))
              (-> old-state
                  (assoc :score new-score)
                  (update-in [:lives] + (if new-life 1 0))
@@ -329,6 +331,7 @@
       (assoc :shot-count 0)))
 
 (defn level-up! []
+  (sound/play-sound :level-up 0.5 false)
   (swap! state
          #(let [new-level (inc (:level %))]
             (load-level % new-level))))
