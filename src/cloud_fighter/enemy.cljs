@@ -4,6 +4,8 @@
             [infinitelives.utils.boid :as b]
             [infinitelives.utils.math :as math]
             [infinitelives.utils.spatial :as spatial]
+            [infinitelives.utils.sound :as sound]
+            [infinitelives.utils.console :refer [log]]
             [infinitelives.pixi.sprite :as s]
             [cloud-fighter.state :as state]
             [cloud-fighter.explosion :as explosion]
@@ -35,7 +37,8 @@
         bkey (keyword (gensym))
         skey [:enemy-bullet bkey]]
     (go
-      (m/with-sprite canvas :bullets
+      (sound/play-sound :enemy-shoot 0.5 false)
+      (m/with-sprite canvas :clouds-lower
         [bullet (s/make-sprite :bullet :scale 4 :x 0 :y 0)]
         (swap! enemy-bullets assoc bkey bullet)
         (spatial/add-to-spatial! :default skey (vec2/as-vector initial-pos))
@@ -110,6 +113,7 @@
               (pos? (count matched))
               ;; shot!
               (do
+                (sound/play-sound :enemy-explode 0.5 false)
                 (explosion/explosion canvas enemy true false)
                 (bullet/remove! (-> matched first second))
                 (spatial/remove-from-spatial :default skey (vec2/as-vector (:pos boid)))
