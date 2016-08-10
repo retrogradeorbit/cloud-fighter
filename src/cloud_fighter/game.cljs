@@ -233,7 +233,7 @@
           (when
               (and (:alive? @state/state)
                    (or (:enemy collided-set) (:enemy-bullet collided-set)
-                       (:boss collided-set)))
+                       (:boss collided-set) (:missile collided-set)))
 
             ;; TODO: remove enemy-bullet when collided with bullet
             (explosion/explosion canvas player false false)
