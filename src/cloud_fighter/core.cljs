@@ -242,7 +242,24 @@
                            "img/cloud-text.png"
                            "img/fighter-text.png"
                            "img/fonts.png"
-                           "img/sprites.png"]))
+                           "img/sprites.png"
+                           "sfx/player-explode.ogg"
+                           "sfx/player-shoot.ogg"
+                           "sfx/player-start.ogg"
+                           "sfx/enemy-explode.ogg"
+                           "sfx/parachute-shot.ogg"
+                           "sfx/parachute-pickup.ogg"
+                           "sfx/missile.ogg"
+                           "sfx/pop.ogg"
+                           "sfx/one-up.ogg"
+                           "sfx/boss-loop.ogg"
+                           "sfx/level-up.ogg"
+                           "sfx/game-over.ogg"
+                           "sfx/enemy-shoot.ogg"
+                           "sfx/title-slide.ogg"
+                           "sfx/blip.ogg"
+
+]))
 
     (pf/pixel-font :small "img/fonts.png" [16 65] [250 111]
                    :chars ["ABCDEFGHIJKLMNOPQRSTUVWXYZ/"
