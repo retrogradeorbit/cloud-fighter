@@ -89,15 +89,16 @@
        text-5 (pf/make-text :small "Fire Weapon" :scale font-scale :x 150 :y 230 :tint 0xffff80 :visible false)
        ]
       (loop [f 0]
-        (when (= f 60) (s/set-visible! text true))
-        (when (= f 80) (s/set-visible! text-2 true))
-        (when (= f 100) (s/set-visible! text-4 true))
-        (when (= f 120) (s/set-visible! text-3 true))
-        (when (= f 140) (s/set-visible! text-5 true))
+        (when (= f 60) (sound/play-sound :blip 0.5 false) (s/set-visible! text true))
+        (when (= f 80) (sound/play-sound :blip 0.5 false) (s/set-visible! text-2 true))
+        (when (= f 100) (sound/play-sound :blip 0.5 false) (s/set-visible! text-4 true))
+        (when (= f 120) (sound/play-sound :blip 0.5 false) (s/set-visible! text-3 true))
+        (when (= f 140) (sound/play-sound :blip 0.5 false) (s/set-visible! text-5 true))
         (<! (e/next-frame))
         (when (< f 350)
           (recur (inc f))))
 
+      (sound/play-sound :title-slide 0.5 false)
       (loop [f 0]
         (s/set-x! text-2 (- -200 (Math/pow 1.2 f)))
         (s/set-x! text-3 (- -200 (Math/pow 1.2 f)))
@@ -108,6 +109,7 @@
         (when (< f 40)
           (recur (inc f))))
 
+      (sound/play-sound :title-slide 0.5 false)
       (loop [f 0]
         (s/set-y! text (+ 150 (Math/pow 1.2 f)))
         (<! (e/next-frame))
@@ -124,15 +126,16 @@
        text-5 (pf/make-text :small "Fire Weapon" :scale font-scale :x 150 :y 230 :tint 0xffff80 :visible false)
        ]
       (loop [f 0]
-        (when (= f 60) (s/set-visible! text true))
-        (when (= f 80) (s/set-visible! text-2 true))
-        (when (= f 100) (s/set-visible! text-4 true))
-        (when (= f 120) (s/set-visible! text-3 true))
-        (when (= f 140) (s/set-visible! text-5 true))
+        (when (= f 60) (sound/play-sound :blip 0.5 false) (s/set-visible! text true))
+        (when (= f 80) (sound/play-sound :blip 0.5 false) (s/set-visible! text-2 true))
+        (when (= f 100) (sound/play-sound :blip 0.5 false) (s/set-visible! text-4 true))
+        (when (= f 120) (sound/play-sound :blip 0.5 false) (s/set-visible! text-3 true))
+        (when (= f 140) (sound/play-sound :blip 0.5 false) (s/set-visible! text-5 true))
         (<! (e/next-frame))
         (when (< f 350)
           (recur (inc f))))
 
+      (sound/play-sound :title-slide 0.5 false)
       (loop [f 0]
         (s/set-x! text-2 (- -200 (Math/pow 1.2 f)))
         (s/set-x! text-3 (- -200 (Math/pow 1.2 f)))
@@ -143,6 +146,7 @@
         (when (< f 40)
           (recur (inc f))))
 
+      (sound/play-sound :title-slide 0.5 false)
       (loop [f 0]
         (s/set-y! text (+ 150 (Math/pow 1.2 f)))
         (<! (e/next-frame))
@@ -159,15 +163,16 @@
        text-5 (pf/make-text :small "For August 2016 Lisp Gamejam" :scale font-scale :x 170 :y 230 :tint 0xffff80 :visible false)
        ]
       (loop [f 0]
-        (when (= f 60) (s/set-visible! text true))
-        (when (= f 80) (s/set-visible! text-2 true))
-        (when (= f 100) (s/set-visible! text-4 true))
-        (when (= f 120) (s/set-visible! text-3 true))
-        (when (= f 140) (s/set-visible! text-5 true))
+        (when (= f 60) (sound/play-sound :blip 0.5 false) (s/set-visible! text true))
+        (when (= f 80) (sound/play-sound :blip 0.5 false) (s/set-visible! text-2 true))
+        (when (= f 100) (sound/play-sound :blip 0.5 false) (s/set-visible! text-4 true))
+        (when (= f 120) (sound/play-sound :blip 0.5 false) (s/set-visible! text-3 true))
+        (when (= f 140) (sound/play-sound :blip 0.5 false) (s/set-visible! text-5 true))
         (<! (e/next-frame))
         (when (< f 350)
           (recur (inc f))))
 
+      (sound/play-sound :title-slide 0.5 false)
       (loop [f 0]
         (s/set-x! text-2 (- -220 (Math/pow 1.2 f)))
         (s/set-x! text-3 (- -220 (Math/pow 1.2 f)))
@@ -178,6 +183,7 @@
         (when (< f 40)
           (recur (inc f))))
 
+      (sound/play-sound :title-slide 0.5 false)
       (loop [f 0]
         (s/set-y! text (+ 150 (Math/pow 1.2 f)))
         (<! (e/next-frame))
@@ -222,7 +228,8 @@
 (defonce main
   (go
     (<! (r/load-resources canvas :ui
-                          ["img/cloud_1.png"
+                          [
+                           "img/cloud_1.png"
                            "img/cloud_2.png"
                            "img/cloud_3.png"
                            "img/cloud_4.png"
