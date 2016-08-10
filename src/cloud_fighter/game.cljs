@@ -4,6 +4,7 @@
             [infinitelives.utils.vec2 :as vec2]
             [infinitelives.utils.events :as events]
             [infinitelives.utils.spatial :as spatial]
+            [infinitelives.utils.sound :as sound]
             [infinitelives.utils.console :refer [log]]
             [infinitelives.pixi.pixelfont :as pf]
             [cloud-fighter.parallax :as parallax]
@@ -102,6 +103,7 @@
 
 (defn get-ready [canvas heading]
   (go
+    (sound/play-sound :player-start 0.5 false)
     (m/with-sprite canvas :ui
       [player-one-text (pf/make-text :small "Player One" :scale 3 :x 0 :y -116
                                      :tint 0xff4080)
@@ -115,6 +117,7 @@
 
 (defn game-over [canvas heading]
   (go
+    (sound/play-sound :game-over 0.5 false)
     (m/with-sprite canvas :ui
       [player-one-text (pf/make-text :small "Game Over" :scale 3 :x 0 :y 0
                                      :tint 0xff4080)]
@@ -205,6 +208,7 @@
         (s/set-rotation! player (vec2/heading (vec2/rotate-90 heading)))
 
         (when (and fire (not last-fire))
+          (sound/play-sound :player-shoot 0.5 false)
           (bullet/spawn-bullet! canvas heading 10 60))
 
         (when (and (:alive? @state/state) (< (enemy/count-enemies)
@@ -233,6 +237,7 @@
 
             ;; TODO: remove enemy-bullet when collided with bullet
             (explosion/explosion canvas player false false)
+            (sound/play-sound :player-explode 0.5 false)
             (state/kill-player!))
 
           (when (:parachute collided-set)
