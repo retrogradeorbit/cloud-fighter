@@ -5,6 +5,7 @@
             [infinitelives.utils.math :as math]
             [infinitelives.utils.console :refer [log]]
             [infinitelives.utils.spatial :as spatial]
+            [infinitelives.utils.sound :as sound]
             [infinitelives.pixi.sprite :as s]
             [cloud-fighter.state :as state]
             [cloud-fighter.explosion :as explosion]
@@ -69,6 +70,7 @@
               (pos? (count matched))
               ;; shot!
               (do
+                (sound/play-sound :parachute-shot 0.5 false)
                 (bullet/remove! (-> matched first second))
                 (spatial/remove-from-spatial :default skey (vec2/as-vector (:pos boid)))
                 (remove! pkey))
@@ -87,6 +89,7 @@
               ;; key no longer in set
               (not (pkey @parachutes))
               (do
+                (sound/play-sound :parachute-pickup 0.5 false)
                 (spatial/remove-from-spatial :default skey (vec2/as-vector (:pos boid)))
                 (state/add-score! 2000)
                 (score/popup! canvas (:pos boid) 2000 200))
