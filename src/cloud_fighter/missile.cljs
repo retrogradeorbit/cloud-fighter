@@ -5,6 +5,7 @@
             [infinitelives.utils.math :as math]
             [infinitelives.utils.console :refer [log]]
             [infinitelives.utils.spatial :as spatial]
+            [infinitelives.utils.sound :as sound]
             [infinitelives.pixi.sprite :as s]
             [cloud-fighter.state :as state]
             [cloud-fighter.explosion :as explosion]
@@ -30,6 +31,7 @@
 
 (defn pop-anim! [canvas pos]
   (go
+    (sound/play-sound :pop 0.5 false)
     (m/with-sprite canvas :enemy
       [pop (s/make-sprite :pop-1 :scale 2)]
       (loop [frame 0 pos pos]
@@ -45,6 +47,7 @@
 
 (defn spawn [canvas start-pos start-dir life]
   (go
+    (sound/play-sound :missile 0.5 false)
     (let [mkey (keyword (gensym))
           skey [:missile mkey]]
       (m/with-sprite canvas :enemy
