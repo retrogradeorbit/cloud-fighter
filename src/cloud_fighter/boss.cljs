@@ -51,9 +51,12 @@
                       (vec2/vec2 hw (math/rand-between (- hh) hh)))
           dx (case direction :left -1 :right 1)
           bkey (keyword (gensym))
-          skey [:boss bkey]]
+          skey [:boss bkey]
+          enemy-bullet-scale (:enemy-bullet-scale @state/state)
+          enemy-bullet-gfx (:enemy-bullet-gfx @state/state)
+          ]
       (m/with-sprite canvas :enemy
-        [boss (s/make-sprite :blimp :scale 3)]
+        [boss (s/make-sprite (:boss @state/state) :scale 3)]
         (s/set-scale! boss (* -3 dx) 3)
         (add! bkey bosses)
         (spatial/add-to-spatial! :default skey (vec2/as-vector start-pos))
@@ -64,6 +67,20 @@
                ]
           (s/set-pos! boss (:pos boid))
           (<! (e/next-frame))
+
+          ;; shoot & missile
+          (let [prob (rand)]
+            (cond (< prob (:boss-bullet-probability @state/state))
+                  (cloud-fighter.enemy/spawn-bullet!
+                   canvas (:pos boid)
+                   (vec2/scale (:pos boid) -1)
+                   (:boss-bullet-speed @state/state)
+                   (:boss-bullet-life @state/state)
+                   enemy-bullet-scale
+                   enemy-bullet-gfx)
+
+                  (< (:boss-bullet-probability @state/state) prob (+ (:boss-bullet-probability @state/state) (:boss-missile-probability @state/state)))
+                  (missile/spawn canvas (:pos boid) (:vel boid) (:boss-missile-life @state/state))))
 
           ;; check for collision
           (let [matched (->>

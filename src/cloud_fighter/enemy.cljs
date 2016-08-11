@@ -31,15 +31,16 @@
 (defn remove-bullet! [bkey]
   (swap! enemy-bullets dissoc bkey))
 
-(defn spawn-bullet! [canvas initial-pos heading speed lifetime]
+(defn spawn-bullet! [canvas initial-pos heading speed lifetime bullet-scale bullet-gfx]
   (let [update (-> heading vec2/unit
                    (vec2/scale speed))
         bkey (keyword (gensym))
-        skey [:enemy-bullet bkey]]
+        skey [:enemy-bullet bkey]
+        ]
     (go
       (sound/play-sound :enemy-shoot 0.5 false)
       (m/with-sprite canvas :clouds-lower
-        [bullet (s/make-sprite :bullet :scale 4 :x 0 :y 0)]
+        [bullet (s/make-sprite bullet-gfx :scale bullet-scale :x 0 :y 0)]
         (swap! enemy-bullets assoc bkey bullet)
         (spatial/add-to-spatial! :default skey (vec2/as-vector initial-pos))
         (loop [n lifetime
@@ -80,22 +81,29 @@
                         (vec2/unit)
                         (vec2/rotate (rand)))
           ekey (keyword (gensym))
-          skey [:enemy ekey]]
+          skey [:enemy ekey]
+          enemy-rotate (:enemy-rotate @state/state)
+          enemy-bullet-scale (:enemy-bullet-scale @state/state)
+          enemy-bullet-gfx (:enemy-bullet-gfx @state/state)
+          ]
+
       (m/with-sprite canvas :enemy
-        [enemy (s/make-sprite (:enemy-texture @state/state) :scale 2)]
+        [enemy (s/make-sprite (:enemy-gfx @state/state) :scale 2)]
         (add! ekey enemy)
         (spatial/add-to-spatial! :default skey (vec2/as-vector start-pos))
         (loop [boid {:mass 10.0 :pos start-pos :vel start-dir
                      :max-force 1.0 :max-speed (:enemy-speed @state/state)}]
           (s/set-pos! enemy (:pos boid))
-          (s/set-rotation! enemy (+ (vec2/heading (:vel boid)) (/ Math/PI 2)))
+          (when enemy-rotate
+            (s/set-rotation! enemy (+ (vec2/heading (:vel boid)) (/ Math/PI 2))))
           (<! (e/next-frame))
 
           ;; random shoot? TODO: only shoot when we are pointed
           ;; (somewhat) at the player
           (let [prob (rand)]
             (cond (< prob (:enemy-bullet-probability @state/state))
-                  (spawn-bullet! canvas (:pos boid) (:vel boid) (:enemy-bullet-speed @state/state) (:enemy-bullet-life @state/state))
+                  (spawn-bullet! canvas (:pos boid) (:vel boid) (:enemy-bullet-speed @state/state) (:enemy-bullet-life @state/state) enemy-bullet-scale
+                                 enemy-bullet-gfx)
 
                   (< (:enemy-bullet-probability @state/state) prob (+ (:enemy-bullet-probability @state/state) (:enemy-missile-probability @state/state)))
                   (missile/spawn canvas (:pos boid) (:vel boid) (:enemy-missile-life @state/state))))

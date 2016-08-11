@@ -14,8 +14,6 @@
   (:require-macros [cljs.core.async.macros :refer [go]]
                    [infinitelives.pixi.macros :as m]))
 
-(def missile-speed 4)
-
 (defonce missiles (atom {}))
 
 (defn add! [mkey missile]
@@ -51,11 +49,11 @@
     (let [mkey (keyword (gensym))
           skey [:missile mkey]]
       (m/with-sprite canvas :enemy
-        [missile (s/make-sprite :missile :scale 2)]
+        [missile (s/make-sprite (:enemy-missile-gfx @state/state) :scale 2)]
         (add! mkey missile)
         (spatial/add-to-spatial! :default skey (vec2/as-vector start-pos))
         (loop [boid {:mass 10.0 :pos start-pos :vel start-dir
-                     :max-force 1.0 :max-speed missile-speed}
+                     :max-force 1.0 :max-speed (:enemy-missile-speed @state/state)}
                life life]
           (s/set-pos! missile (:pos boid))
           (s/set-rotation! missile (+ (vec2/heading (:vel boid)) (/ Math/PI 2)))
