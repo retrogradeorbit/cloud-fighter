@@ -39,6 +39,7 @@
    :bullet {:pos [32 0] :size [16 16]}
    :missile {:pos [32 16] :size [16 16]}
    :enemy {:pos [48 0] :size [32 32]}
+   :biplane {:pos [48 0] :size [32 32]}
    :parachute {:pos [80 0] :size [32 32]}
    :blimp {:pos [112 0] :size [48 32]}
    :explode-1 {:pos [0 32] :size [32 32]}
@@ -58,6 +59,19 @@
    :small-explosion-4 {:pos [48 80] :size [16 16]}
    :small-explosion-5 {:pos [60 80] :size [16 16]}
    :small-explosion-6 {:pos [72 80] :size [16 16]}
+   :chopper-1 {:pos [0 96] :size [32 32]}
+   :chopper-2 {:pos [32 96] :size [32 32]}
+   :chinook {:pos [80 96] :size [56 32]}
+   :f16 {:pos [0 128] :size [32 32]}
+   :stealth-fighter {:pos [0 160] :size [32 32]}
+   :stealth-bomber {:pos [48 163] :size [32 57]}
+   :ufo {:pos [0 192] :size [32 32]}
+   :b52 {:pos [96 160] :size [64 64]}
+   :mothership {:pos [176 160] :size [64 32]}
+   :ufo-shot {:pos [32 192] :size [16 16]}
+   :ufo-missile {:pos [32 208] :size [16 16]}
+   :stealth-shot {:pos [32 160] :size [16 16]}
+   :stealth-missile {:pos [32 176] :size [16 16]}
 })
 
 (defonce canvas
