@@ -46,7 +46,7 @@
     :boss-speed 1.0}
 
    {:background 0xa0c8ef
-    :max-shot 4
+    :max-shot 48
     :num-enemies 4
     :enemy-speed 3.0
     :enemy-bullet-speed 5
@@ -66,12 +66,12 @@
     :boss-speed 1.0}
 
    {:background 0xbf76ed
-    :max-shot 5
+    :max-shot 54
     :num-enemies 4
     :enemy-speed 3.0
     :enemy-bullet-speed 5
     :enemy-bullet-life 200
-    :enemy-bullet-probability 0.001
+    :enemy-bullet-probability 0.002
     :enemy-missile-probability 0.001
     :enemy-missile-life 300
     :enemy-score 100
@@ -86,13 +86,13 @@
     :boss-speed 1.0}
 
    {:background 0x8476ed
-    :max-shot 5
+    :max-shot 54
     :num-enemies 4
     :enemy-speed 3.0
     :enemy-bullet-speed 5
     :enemy-bullet-life 200
-    :enemy-bullet-probability 0.001
-    :enemy-missile-probability 0.001
+    :enemy-bullet-probability 0.002
+    :enemy-missile-probability 0.002
     :enemy-missile-life 300
     :enemy-score 100
     :enemy-seek-proportion 0.3
@@ -106,13 +106,13 @@
     :boss-speed 1.0}
 
    {:background 0xedd376
-    :max-shot 5
+    :max-shot 64
     :num-enemies 4
-    :enemy-speed 3.0
+    :enemy-speed 3.5
     :enemy-bullet-speed 5
     :enemy-bullet-life 200
-    :enemy-bullet-probability 0.001
-    :enemy-missile-probability 0.001
+    :enemy-bullet-probability 0.003
+    :enemy-missile-probability 0.002
     :enemy-missile-life 300
     :enemy-score 100
     :enemy-seek-proportion 0.3
@@ -126,13 +126,13 @@
     :boss-speed 1.0}
 
    {:background 0xed7686
-    :max-shot 5
+    :max-shot 64
     :num-enemies 4
-    :enemy-speed 3.0
+    :enemy-speed 3.5
     :enemy-bullet-speed 5
     :enemy-bullet-life 200
-    :enemy-bullet-probability 0.001
-    :enemy-missile-probability 0.001
+    :enemy-bullet-probability 0.003
+    :enemy-missile-probability 0.003
     :enemy-missile-life 300
     :enemy-score 100
     :enemy-seek-proportion 0.3
@@ -146,13 +146,13 @@
     :boss-speed 1.0}
 
    {:background 0x9dba53
-    :max-shot 5
+    :max-shot 96
     :num-enemies 4
-    :enemy-speed 3.0
+    :enemy-speed 3.8
     :enemy-bullet-speed 5
     :enemy-bullet-life 200
-    :enemy-bullet-probability 0.001
-    :enemy-missile-probability 0.001
+    :enemy-bullet-probability 0.003
+    :enemy-missile-probability 0.003
     :enemy-missile-life 300
     :enemy-score 100
     :enemy-seek-proportion 0.3
@@ -166,13 +166,13 @@
     :boss-speed 1.0}
 
    {:background 0x69ba53
-    :max-shot 5
+    :max-shot 96
     :num-enemies 4
-    :enemy-speed 3.0
+    :enemy-speed 4.0
     :enemy-bullet-speed 5
     :enemy-bullet-life 200
-    :enemy-bullet-probability 0.001
-    :enemy-missile-probability 0.001
+    :enemy-bullet-probability 0.005
+    :enemy-missile-probability 0.002
     :enemy-missile-life 300
     :enemy-score 100
     :enemy-seek-proportion 0.3
@@ -186,13 +186,13 @@
     :boss-speed 1.0}
 
    {:background 0xbaa353
-    :max-shot 5
+    :max-shot 96
     :num-enemies 4
-    :enemy-speed 3.0
+    :enemy-speed 4.0
     :enemy-bullet-speed 5
     :enemy-bullet-life 200
-    :enemy-bullet-probability 0.001
-    :enemy-missile-probability 0.001
+    :enemy-bullet-probability 0.005
+    :enemy-missile-probability 0.003
     :enemy-missile-life 300
     :enemy-score 100
     :enemy-seek-proportion 0.3
@@ -206,13 +206,13 @@
     :boss-speed 1.0}
 
    {:background 0x000000
-    :max-shot 5
+    :max-shot 128
     :num-enemies 4
-    :enemy-speed 3.0
+    :enemy-speed 4.0
     :enemy-bullet-speed 5
     :enemy-bullet-life 200
-    :enemy-bullet-probability 0.001
-    :enemy-missile-probability 0.001
+    :enemy-bullet-probability 0.007
+    :enemy-missile-probability 0.005
     :enemy-missile-life 300
     :enemy-score 100
     :enemy-seek-proportion 0.3
