@@ -1,9 +1,12 @@
 (ns cloud-fighter.state
   (:require [infinitelives.utils.vec2 :as vec2]
-            [infinitelives.utils.sound :as sound]))
+            [infinitelives.utils.sound :as sound]
+            [infinitelives.utils.console :refer [log]]))
 
 (def levels
   [
+
+   ;; biplanes
    {:background 0xa0a0f0
     :max-shot 40
     :num-enemies 4
@@ -18,7 +21,7 @@
     :enemy-bullet-probability 0.0001
     :enemy-missile-probability 0
     :enemy-missile-life 300
-    :enemy-missile-speed 3
+    :enemy-missile-speed 3.3
     :enemy-score 100
     :enemy-seek-proportion 0.3
     :enemy-wander-a 8
@@ -38,12 +41,14 @@
 
    {
     :background 0x5d6376
+    :max-shot 40
     :num-enemies 6
     :enemy-speed 3
     :enemy-bullet-speed 2
     :enemy-bullet-life 200
-    :enemy-bullet-probability 0.0003
-    :enemy-missile-probability 0.0003
+    :enemy-bullet-probability 0.0004
+    :enemy-missile-speed 3.3
+    :enemy-missile-probability 0.0004
     :enemy-missile-life 200
     :enemy-score 100
     :enemy-seek-proportion 0.3
@@ -57,89 +62,97 @@
     :boss-speed 1.0
     }
 
-   {:background 0xc8a0ef
+   ;; helicopters
+   {:background 0xa880cf
+    :max-shot 50
     :num-enemies 6
     :enemy-gfx :chopper-1
     :enemy-speed 3.0
     :enemy-bullet-speed 3
     :enemy-bullet-life 200
     :enemy-bullet-probability 0
-    :enemy-missile-probability 0.0002
+    :enemy-missile-probability 0.0006
     :enemy-missile-life 300
+    :enemy-missile-speed 3.5
     :enemy-score 100
-    :enemy-seek-proportion 0.20
+    :enemy-seek-proportion 0.40
     :enemy-wander-a 8
     :enemy-wander-b 4
     :enemy-wander-c 0.5
     :parachute-prob 0.005
-    :num-parachutes 1
+    :num-parachutes 2
     :boss :chinook
-    :boss-shots 10
-    :boss-score 2000
-    :boss-speed 1.0
-    :boss-missile-probability 0.0005
+    :boss-shots 15
+    :boss-score 3000
+    :boss-speed 2.0
+    :boss-missile-probability 0.001
     :boss-missile-life 300
     :boss-bullet-probability 0
     :boss-bullet-speed 5
     :boss-bullet-life 200
-}
+    }
 
    {
     :background 0x0d7686
     :num-enemies 8
-    :enemy-bullet-speed 3
-    :enemy-bullet-life 200
+    :enemy-speed 3.2
+    :enemy-bullet-speed 3.1
+    :enemy-bullet-life 250
     :enemy-bullet-probability 0.0003
-    :enemy-missile-probability 0.0002
+    :enemy-missile-probability 0.0006
     :enemy-missile-life 300
+    :enemy-missile-speed 3.5
     :enemy-score 100
-    :enemy-seek-proportion 0.2
+    :enemy-seek-proportion 0.40
     :enemy-wander-a 8
     :enemy-wander-b 4
     :enemy-wander-c 0.5
-    :parachute-prob 0.01
-    :num-parachutes 1
+    :parachute-prob 0.03
+    :num-parachutes 2
     :boss-shots 10
-    :boss-score 2000
-    :boss-speed 1.0
+    :boss-score 3000
+    :boss-speed 2.0
 
     }
 
-
+   ;; f16s
    {:background 0xa0c8ef
+    :max-shot 60
     :num-enemies 8
     :enemy-gfx :f16
     :enemy-speed 3.0
     :enemy-bullet-speed 3
     :enemy-bullet-life 200
-    :enemy-bullet-probability 0.0001
-    :enemy-missile-probability 0.0002
+    :enemy-bullet-probability 0.0002
+    :enemy-missile-probability 0.0004
     :enemy-missile-life 300
+    :enemy-missile-speed 3.7
     :enemy-score 100
     :enemy-seek-proportion 0.3
     :enemy-wander-a 8
     :enemy-wander-b 4
     :enemy-wander-c 0.5
     :parachute-prob 0.01
-    :num-parachutes 1
+    :num-parachutes 3
     :boss :b52
-    :boss-shots 10
-    :boss-score 2000
-    :boss-speed 1.0
+    :boss-shots 20
+    :boss-score 4000
+    :boss-speed 3.0
     :boss-missile-life 300
-    :boss-bullet-probability 0.0001
+    :boss-bullet-probability 0.002
     :boss-bullet-speed 3
     :boss-bullet-life 200
-    :boss-missile-probability 0.0002
+    :boss-missile-probability 0.004
     }
 
- {:background 0x9dba53
-    :enemy-speed 3.8
-    :enemy-bullet-speed 4
+   {:background 0x9dba53
+    :enemy-speed 3.5
+    :enemy-bullet-speed 3.5
     :enemy-bullet-life 200
-    :enemy-bullet-probability 0.0003
-    :enemy-missile-probability 0.0003
+    :enemy-bullet-probability 0.0004
+    :enemy-missile-probability 0.0005
     :enemy-missile-life 300
+    :enemy-missile-speed 3.9
     :enemy-score 100
     :enemy-seek-proportion 0.3
     :enemy-wander-a 8
@@ -147,13 +160,14 @@
     :enemy-wander-c 0.5
     :parachute-prob 0.01
     :num-parachutes 1
-    :boss-shots 10
-    :boss-score 2000
-    :boss-speed 1.0}
+    :boss-shots 20
+    :boss-score 4000
+    :boss-speed 3.0}
 
 
-   {:background 0xbf76ed
-    :max-shot 60
+   ;; stealth
+   {:background 0x7f56ad
+    :max-shot 70
     :num-enemies 8
     :enemy-gfx :stealth-fighter
     :enemy-bullet-gfx :stealth-shot
@@ -171,25 +185,27 @@
     :enemy-wander-b 4
     :enemy-wander-c 0.5
     :parachute-prob 0.01
-    :num-parachutes 2
+    :num-parachutes 4
     :boss :stealth-bomber
-    :boss-shots 10
-    :boss-score 2000
-    :boss-speed 1.0
-    :boss-missile-probability 0.0002
+    :boss-shots 25
+    :boss-score 5000
+    :boss-speed 4.0
+    :boss-missile-probability 0.004
     :boss-missile-life 300
-    :boss-bullet-probability 0.0002
-    :boss-bullet-speed 5
+    :boss-bullet-probability 0.004
+    :boss-bullet-speed 2
+    :boss-missile-speed 3.8
     :boss-bullet-life 200
     }
 
- {:background 0x69ba53
-    :enemy-speed 4.0
-    :enemy-bullet-speed 4
+   {:background 0x496a33
+    :enemy-speed 3.5
+    :enemy-bullet-speed 3.5
     :enemy-bullet-life 200
     :enemy-bullet-probability 0.0005
     :enemy-missile-probability 0.0005
     :enemy-missile-life 300
+    :enemy-missile-speed 3.9
     :enemy-score 100
     :enemy-seek-proportion 0.3
     :enemy-wander-a 8
@@ -197,69 +213,78 @@
     :enemy-wander-c 0.5
     :parachute-prob 0.01
     :num-parachutes 2
-    :boss-shots 10
-    :boss-score 2000
-    :boss-speed 1.0}
+    :boss-shots 25
+    :boss-missile-probability 0.006
+    :boss-missile-life 300
+    :boss-bullet-probability 0.006
+    :boss-score 4000
+    :boss-speed 4.0}
 
-
+   ;; ufo
    {:background 0x8476ed
     :enemy-gfx :ufo
     :enemy-rotate false
-    :enemy-speed 3.0
+    :enemy-speed 3.5
     :enemy-bullet-gfx :ufo-shot
     :enemy-bullet-scale 2
     :enemy-missile-gfx :ufo-missile
-    :enemy-bullet-speed 5
+    :enemy-bullet-speed 3.8
     :enemy-bullet-life 200
     :enemy-bullet-probability 0.0002
     :enemy-missile-probability 0.0002
     :enemy-missile-life 300
+    :enemy-missile-speed 3.9
     :enemy-score 100
-    :enemy-seek-proportion 0.3
+    :enemy-seek-proportion 0.1
     :enemy-wander-a 8
     :enemy-wander-b 4
     :enemy-wander-c 0.5
     :parachute-prob 0.01
-    :num-parachutes 2
+    :num-parachutes 5
     :boss :mothership
-    :boss-shots 10
-    :boss-score 2000
-    :boss-speed 1.0
-    :boss-missile-probability 0.0001
+    :boss-shots 30
+    :boss-score 10000
+    :boss-speed 4.5
+    :boss-missile-probability 0.001
     :boss-missile-life 300
-    :boss-bullet-probability 0.0001
+    :boss-bullet-probability 0.001
     :boss-bullet-speed 5
     :boss-bullet-life 200
 
-}
+    }
 
 
    {:background 0x000000
     :max-shot 30
     :num-enemies 4
-    :enemy-speed 4.0
-    :enemy-bullet-speed 5
-    :enemy-bullet-life 200
+    :enemy-speed 3.7
+    :enemy-bullet-speed 4
+    :enemy-bullet-life 400
     :enemy-bullet-probability 0.0007
     :enemy-missile-probability 0.0005
-    :enemy-missile-life 300
+    :enemy-missile-life 400
+    :enemy-missile-speed 3.9
     :enemy-score 100
-    :enemy-seek-proportion 0.3
+    :enemy-seek-proportion 0.2
     :enemy-wander-a 8
     :enemy-wander-b 4
     :enemy-wander-c 0.5
     :parachute-prob 0.01
-    :num-parachutes 3
-    :boss-shots 10
-    :boss-score 2000
-    :boss-speed 1.0
-    :boss-missile-probability 0.0002
+    :num-parachutes 5
+    :boss-shots 30
+    :boss-score 10000
+    :boss-speed 4.5
+    :boss-missile-probability 0.002
     :boss-missile-life 300
-    :boss-bullet-probability 0.0002
+    :boss-bullet-probability 0.002
     :boss-bullet-speed 3
     :boss-bullet-life 200
     :boss-missile-speed 5}
    ])
+
+(def num-levels (count levels))
+(def rotate-speed 0.05)
+(def player-speed 4)
 
 (defonce state
   (atom
