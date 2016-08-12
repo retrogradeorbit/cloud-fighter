@@ -211,8 +211,12 @@
           (sound/play-sound :player-shoot 0.5 false)
           (bullet/spawn-bullet! canvas heading 10 60))
 
-        (when (and (:alive? @state/state) (< (enemy/count-enemies)
-                                             (:num-enemies @state/state)))
+        (when (and (:alive? @state/state)
+                   (< (enemy/count-enemies)
+                      (*
+                       (:num-enemies @state/state)
+                       (/ (max (.-innerWidth js/window) (.-innerHeight js/window)) 1280)
+                       )))
           (enemy/spawn canvas))
 
         (when (and (< (parachute/count-parachutes) (:num-parachutes @state/state))
