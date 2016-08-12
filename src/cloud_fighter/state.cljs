@@ -385,10 +385,23 @@
                  (update-in [:lives] min 9))))))
 
 (defn load-level [state level]
-  (-> state
-      (into (levels level))
-      (assoc :level level)
-      (assoc :shot-count 0)))
+  (let [cycle (int (/ level num-levels))
+        remain (mod level num-levels)
+        multi (+ 1 (* 0.25 cycle))]
+    (log "level:" level "cycle:" cycle "remain:" remain "multi:" multi)
+    (-> state
+        (into
+         (-> (levels remain)
+             (update-in [:enemy-speed] * multi)
+             (update-in [:enemy-missile-speed] * multi)
+             (update-in [:enemy-bullet-speed] * multi)
+             (update-in [:boss-speed] * multi)
+             (update-in [:boss-missile-speed] * multi)
+             (update-in [:boss-bullet-speed] * multi)
+             (assoc :rotate-speed (* rotate-speed multi))
+             (assoc :player-speed (* player-speed multi))))
+        (assoc :level level)
+        (assoc :shot-count 0))))
 
 (defn level-up! []
   (sound/play-sound :level-up 0.5 false)
