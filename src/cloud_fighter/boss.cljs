@@ -61,8 +61,8 @@
         (add! bkey bosses)
         (spatial/add-to-spatial! :default skey (vec2/as-vector start-pos))
         (loop [boid {:mass 10.0 :pos start-pos
-                     :vel (vec2/vec2 dx 0)
-                     :max-force 1.0 :max-speed (:boss-speed @state/state)}
+                     :vel (vec2/vec2 (* (:boss-speed @state/state) dx) 0)
+                     :max-force 2.0 :max-speed (:boss-speed @state/state)}
                shot-times 0
                ]
           (s/set-pos! boss (:pos boid))
