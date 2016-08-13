@@ -196,6 +196,14 @@
                      :small (get-shot-string)))
                   (recur new-shot-count))))))
 
+(defn filter-collision-hash [collision-hash min-x max-x min-y max-y]
+  (->> collision-hash
+       (filter
+        (fn [[k [x y]]]
+          (and (< min-x x max-x)
+               (< min-y y max-y))))
+       (into {})))
+
 (defn run [canvas player]
   (go
     ;; new spatial hash
@@ -235,10 +243,11 @@
           (boss/spawn canvas))
 
         ;; check for collision with spatial
-        (let [collided-objs (->>
-                            (spatial/query (:default @spatial/spatial-hashes)
-                                           [-50 -50] [50 50])
-                            keys)
+        (let [collided-hash (spatial/query (:default @spatial/spatial-hashes)
+                                           [-32 -32] [32 32])
+              collided-objs (-> collided-hash
+                                (filter-collision-hash -32 32 -32 32)
+                                keys)
               collided-set (->> collided-objs
                                 (map first)
                                 (into #{}))]
@@ -252,8 +261,9 @@
             (sound/play-sound :player-explode 0.5 false)
             (state/kill-player!))
 
-          (when (:parachute collided-set)
-            (let [pkey (->> collided-objs
+          (when (:parachute (->> collided-hash keys (map first) (into #{})))
+            (let [pkey (->> collided-hash
+                            keys
                             (group-by first)
                             :parachute
                             first
