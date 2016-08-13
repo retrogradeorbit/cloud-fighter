@@ -1,4 +1,4 @@
-# cloud-fighter
+# Cloud Fighter
 
 A game done for the August 2016 Lisp Gamejam
 
