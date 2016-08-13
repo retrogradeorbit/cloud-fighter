@@ -38,6 +38,8 @@ Developed with the InfiniteLives ClojureScript game framework:
 https://infinitelives.github.io/ in particular:
 https://github.com/infinitelives/infinitelives.pixi
 
+Play it on itch.io: https://retrogradeorbit.itch.io/cloud-fighter
+
 Play on github.io: https://retrogradeorbit.github.io/cloud-fighter/
 
 Definitely play with an analog gamepad!  (its much, much harder to
