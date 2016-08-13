@@ -48,7 +48,7 @@
     :enemy-bullet-life 200
     :enemy-bullet-probability 0.0004
     :enemy-missile-speed 3.3
-    :enemy-missile-probability 0.0004
+    :enemy-missile-probability 0
     :enemy-missile-life 200
     :enemy-score 100
     :enemy-seek-proportion 0.3
@@ -94,7 +94,7 @@
 
    {
     :background 0x0d7686
-    :num-enemies 8
+    :num-enemies 6
     :enemy-speed 3.2
     :enemy-bullet-speed 3.1
     :enemy-bullet-life 250
@@ -118,7 +118,7 @@
    ;; f16s
    {:background 0xa0c8ef
     :max-shot 60
-    :num-enemies 8
+    :num-enemies 6
     :enemy-gfx :f16
     :enemy-speed 3.0
     :enemy-bullet-speed 3
@@ -168,7 +168,7 @@
    ;; stealth
    {:background 0x7f56ad
     :max-shot 70
-    :num-enemies 8
+    :num-enemies 7
     :enemy-gfx :stealth-fighter
     :enemy-bullet-gfx :stealth-shot
     :enemy-missile-gfx :stealth-missile
@@ -222,6 +222,7 @@
 
    ;; ufo
    {:background 0x8476ed
+    :num-enemies 8
     :enemy-gfx :ufo
     :enemy-rotate false
     :enemy-speed 3.5
@@ -255,8 +256,8 @@
 
 
    {:background 0x000000
-    :max-shot 30
-    :num-enemies 4
+    :max-shot 70
+    :num-enemies 8
     :enemy-speed 3.7
     :enemy-bullet-speed 4
     :enemy-bullet-life 400
