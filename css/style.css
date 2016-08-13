@@ -14,7 +14,7 @@ body, html {
   margin-left: auto;
   margin-right: auto;
   animation: infinitelives-heartbeat 1.3s ease 0s infinite normal none running;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHAAAABgAQMAAAD/+GSTAAAABlBMVEUAAAD5aQnSkZnaAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQffCQwDFhf1d1faAAAAGXRFWHRDb21tZW50AENyZWF0ZWQgd2l0aCBHSU1QV4EOFwAAAC9JREFUOMtjYGD4DwQwkmHYc//DAYg9krhgoWHPRY3hkcCFCTAwjBQuOGEzjAguAHqAPO46M2SkAAAAAElFTkSuQmCC);
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHAAAABgCAMAAADy6AbiAAAABlBMVEUAAAD6+vquD138AAAAAnRSTlMA/1uRIrUAAABiSURBVGiB7dUxCgAgDANA/f+n3XUIoojiZW572VpKlxqyOj8ECAQCgcALwLQwm3QfCAQCgcAfwFgICAQCgcALwfQwtwNAIBAIBD4ArhaYBoBAIBAIfABMBbYDQCAQCASeBxsgDRoBe1gyXwAAAABJRU5ErkJggg==);
 }
 @-webkit-keyframes infinitelives-heartbeat {
   0% { opacity: 0.7;
