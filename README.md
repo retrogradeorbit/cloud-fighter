@@ -8,7 +8,7 @@ A game done for the August 2016 Lisp Gamejam
 
 ## Overview
 
-#A modern remake of the 1982 arcade classic, Time Pilot.
+###A modern remake of the 1982 arcade classic, Time Pilot.
 
 Plug in your
 game controller and use the analog stick to control the direction of
