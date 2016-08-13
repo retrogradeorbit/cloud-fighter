@@ -97,9 +97,9 @@
   (go-while (not (start?))
     (m/with-sprite canvas :ui
       [text (pf/make-text :small "Keyboard Controls" :scale font-scale :x 0 :y 150 :tint 0x8080ff :visible false)
-       text-2 (pf/make-text :small "←→↑↓" :scale font-scale :x -200 :y 200 :tint 0xffff80 :visible false)
+       text-2 (pf/make-text :small "←→" :scale font-scale :x -200 :y 200 :tint 0xffff80 :visible false)
        text-3 (pf/make-text :small "˽ or `z'" :scale font-scale :x -200 :y 230 :tint 0xffff80 :visible false)
-       text-4 (pf/make-text :small "Change Ship Direction" :scale font-scale :x 150 :y 200 :tint 0xffff80 :visible false)
+       text-4 (pf/make-text :small "Turn Ship Left or Right" :scale font-scale :x 150 :y 200 :tint 0xffff80 :visible false)
        text-5 (pf/make-text :small "Fire Weapon" :scale font-scale :x 150 :y 230 :tint 0xffff80 :visible false)
        ]
       (loop [f 0]
@@ -135,7 +135,7 @@
     (m/with-sprite canvas :ui
       [text (pf/make-text :small "Gamepad Controls" :scale font-scale :x 0 :y 150 :tint 0x8080ff :visible false)
        text-2 (pf/make-text :small "Analog Stick" :scale font-scale :x -200 :y 200 :tint 0xffff80 :visible false)
-       text-3 (pf/make-text :small "A, B, C or D" :scale font-scale :x -200 :y 230 :tint 0xffff80 :visible false)
+       text-3 (pf/make-text :small "A, B, X or Y" :scale font-scale :x -200 :y 230 :tint 0xffff80 :visible false)
        text-4 (pf/make-text :small "Change Ship Direction" :scale font-scale :x 150 :y 200 :tint 0xffff80 :visible false)
        text-5 (pf/make-text :small "Fire Weapon" :scale font-scale :x 150 :y 230 :tint 0xffff80 :visible false)
        ]
