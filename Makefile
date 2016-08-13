@@ -47,3 +47,9 @@ create-initial-build-folder:
 	@echo "git add ."
 	@echo "git commit -a -m 'First release'"
 	@echo "git push origin gh-pages"
+
+itch.io: all
+	rm -rf release cloud-fighter.zip
+	cp -a build release
+	rm -rf release/.git
+	cd release && zip -r ../cloud-fighter.zip .
