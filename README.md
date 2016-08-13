@@ -24,6 +24,9 @@ Start with biplanes and blimps, move through helicopters and chinooks,
 onto jet fighters and B52 bombers, into the era of stealth and then
 beyond into the future!
 
+When you complete all ten levels, the levels start again, but with
+everything 25% faster! How fast can you go?
+
 Extra lives at 10,000 and 60,000 points, and then every 50,000 after
 that.
 
