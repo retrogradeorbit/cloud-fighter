@@ -2,15 +2,50 @@
 
 A game done for the August 2016 Lisp Gamejam
 
-[PLAY IT!](https://retrogradeorbit.github.io/cloud-fighter/)
+[PLAY IT NOW!](https://retrogradeorbit.github.io/cloud-fighter/)
 
-(work in progress)
+![Title screen](./screenshot-02.png)
 
 ## Overview
 
-FIXME: Write a paragraph about the library/project and highlight its goals.
+#A modern remake of the 1982 arcade classic, Time Pilot.
+
+Plug in your
+game controller and use the analog stick to control the direction of
+your ship. Press a button to shoot. Blast wave after wave of enemies
+until the mothership appears. Then blast it out of existence to move
+forwards in time to the next wave.
+
+Collect stranded parachuting pilots along the way for bonus
+points. Avoid enemy bullets and missiles and stay on your toes. And
+don't crash into the mothership!
+
+Start with biplanes and blimps, move through helicopters and chinooks,
+onto jet fighters and B52 bombers, into the era of stealth and then
+beyond into the future!
+
+Extra lives at 10,000 and 60,000 points, and then every 50,000 after
+that.
+
+Written in ClojureScript in 10 days for August Lisp 2016 Gamejam
+
+Source code: https://github.com/retrogradeorbit/cloud-fighter
+
+Developed with the InfiniteLives ClojureScript game framework:
+https://infinitelives.github.io/ in particular:
+https://github.com/infinitelives/infinitelives.pixi
+
+Play on github.io: https://retrogradeorbit.github.io/cloud-fighter/
+
+Definitely play with an analog gamepad!  (its much, much harder to
+play with the keyboard)
+
+Runs best in Chrome
 
 ## Setup
+
+First install the latest versions of infinitelives.utils and
+infinitelives.pixi using `lein install`.
 
 To get an interactive development environment run:
 
