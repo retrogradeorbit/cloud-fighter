@@ -30,7 +30,7 @@ everything 25% faster! How fast can you go?
 Extra lives at 10,000 and 60,000 points, and then every 50,000 after
 that.
 
-<img src="screenshot-01.png" width="48">
+<img src="screenshot-01.png" width="20%"> <img src="screenshot-03.png" width="20%"> <img src="screenshot-04.png" width="20%"> <img src="screenshot-05.png" width="20%">
 
 Written in ClojureScript in 10 days for August Lisp 2016 Gamejam
 
