@@ -23,6 +23,13 @@
                    [infinitelives.pixi.pixelfont :as pf])
 )
 
+(defn rotate-negative-90
+  "calls rotate but is hardcoded -90 degrees. Avoids calling cos and
+  sin"
+  [v]
+  (vec2/vec2 (aget v 1)
+        (- (aget v 0))))
+
 (defn direction []
   (let [gamepad (vec2/vec2 (or (gp/axis 0) 0)
                            (or (gp/axis 1) 0))]
@@ -31,13 +38,14 @@
       gamepad
 
       ;; keyboard
-      (vec2/vec2
-       (cond (events/is-pressed? :left) -1
-             (events/is-pressed? :right) 1
-             :default 0)
-       (cond (events/is-pressed? :up) -1
-             (events/is-pressed? :down) 1
-             :default 0)))))
+      (cond (events/is-pressed? :right)
+            (vec2/rotate-90 (:vel @state/state))
+
+            (events/is-pressed? :left)
+            (rotate-negative-90 (:vel @state/state))
+
+            :default
+            (vec2/zero)))))
 
 (defn fire? []
   (or
