@@ -51,8 +51,15 @@ Runs best in Chrome
 
 ## Setup
 
-First install the latest versions of infinitelives.utils and
-infinitelives.pixi using `lein install`.
+Install the latest version of
+[infinitelives.utils](https://github.com/infinitelives/infinitelives.utils).
+Clone the repo, go into the directory and issue `lein install` to
+install the jar into your local maven repo.
+
+Do the same for
+[infinitelives.pixi](https://github.com/infinitelives/infinitelives.pixi).
+Clone the repo, go into the directory and issue `lein install` to
+install the jar into your local maven repo.
 
 To get an interactive development environment run:
 
